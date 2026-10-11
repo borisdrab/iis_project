@@ -65,8 +65,8 @@ CREATE TABLE Kategorie (
 
     CONSTRAINT fk_kategorie_rodic FOREIGN KEY (rodic_id) REFERENCES Kategorie(id),
     CONSTRAINT fk_kategorie_navrhol FOREIGN KEY (navrhol_id) REFERENCES Uzivatel(id),
-    CONSTRAINT fk_kategorie_schvalil FOREIGN KEY (schvalil_id) REFERENCES Moderator(id),
-)
+    CONSTRAINT fk_kategorie_schvalil FOREIGN KEY (schvalil_id) REFERENCES Moderator(id)
+);
 
 CREATE TABLE Udalost (
     id INT AUTO_INCREMENT PRIMARY KEY,

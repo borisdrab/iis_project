@@ -14,7 +14,7 @@ INSERT INTO Uzivatel (id, vek, pohlavie) VALUES
 (6, 28, 'Muž');
 
 
-INSERT INTO Moderator (id) VALUES (3) (4);
+INSERT INTO Moderator (id) VALUES (3),(4);
 
 
 INSERT INTO Administrator (id) VALUES (4);
