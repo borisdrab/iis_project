@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
-
+use Illuminate\Support\Facades\DB;
 class HandleInertiaRequests extends Middleware
 {
     /**
@@ -35,11 +35,16 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+
+        $id = $request->user()?->id;
         return [
             ...parent::share($request),
             'name' => config('app.name'),
             'auth' => [
                 'user' => $request->user(),
+                'isUser' => $id && DB::table('Uzivatel')->where('id', $id)->exists(),
+                'isModerator' => $id && DB::table('Moderator')->where('id', $id)->exists(),
+                'isAdmin' => $id && DB::table('Administrator')->where('id', $id)->exists(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];

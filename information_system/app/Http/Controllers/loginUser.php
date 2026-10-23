@@ -26,7 +26,7 @@ class loginUser extends Controller
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();
 
-                return back()->withErrors([
+                return back()->withErrors(['email' => 'Účet je deaktivovaný.'
                 ]);
             }
 
