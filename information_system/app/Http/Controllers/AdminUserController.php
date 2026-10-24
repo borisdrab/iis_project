@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Models\Osoba;
-use App\Models\Uzivatel;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use App\Models\Administrator;
 use App\Models\Moderator;
+use App\Models\Osoba;
+use App\Models\Uzivatel;
+use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+
 class AdminUserController extends Controller
 {
-    
     public function index()
     {
         $osoby = DB::table('Osoba')
@@ -40,10 +41,10 @@ class AdminUserController extends Controller
             'kontakt' => ['nullable', 'string', 'max:255'],
             'vek' => ['nullable', 'integer', 'between:0,110'],
             'pohlavie' => ['nullable', 'string', 'max:20'],
-            'rola' => ['required', 'in:Uzivatel,Moderator,Administrator']
+            'rola' => ['required', 'in:Uzivatel,Moderator,Administrator'],
         ]);
 
-        $osoba = DB::transaction(function () use ($data) {
+        DB::transaction(function () use ($data) {
             $osoba = Osoba::create([
                 'meno' => $data['meno'],
                 'email' => $data['email'],
@@ -51,35 +52,23 @@ class AdminUserController extends Controller
                 'kontakt' => $data['kontakt'] ?? null,
                 'aktivny' => true,
             ]);
-            if($data['rola']=='Uzivatel')
-            {
+
                 Uzivatel::create([
                     'id' => $osoba->id,
                     'vek' => $data['vek'] ?? null,
                     'pohlavie' => $data['pohlavie'] ?? null,
                 ]);
+            if (in_array($data['rola'], ['Moderator', 'Administrator'])) {
+                Moderator::create(['id' => $osoba->id]);
             }
-            if($data['rola']=='Moderator')
-            {
-                Moderator::create([
-                    'id' => $osoba->id,
-                ]);
+            if ($data['rola'] === 'Administrator') {
+                Administrator::create(['id' => $osoba->id]);
             }
-            if($data['rola']=='Administrator')
-            {
-                Moderator::create([
-                    'id' => $osoba->id,
-                ]);
-                Administrator::create([
-                    'id' => $osoba->id,
-                ]);
-            }
-
-            return response()->json(['message' => 'Používateľ bol úspešne vytvorený.']);
         });
 
-        return redirect('/');
+        return response()->json(['message' => 'Používateľ bol úspešne vytvorený.'], 201);
     }
+
     public function update(Request $request, $id)
     {
         $osoba = Osoba::findOrFail($id);
@@ -91,50 +80,52 @@ class AdminUserController extends Controller
             'kontakt' => ['nullable', 'string', 'max:255'],
             'vek' => ['nullable', 'integer', 'between:0,110'],
             'pohlavie' => ['nullable', 'string', 'max:20'],
-            'rola' => ['required', 'in:Uzivatel,Moderator,Administrator']
+            'rola' => ['required', 'in:Uzivatel,Moderator,Administrator'],
         ]);
 
-        DB::transaction(function () use ($osoba, $data) {
-            $updateData = [
-                'meno' => $data['meno'],
-                'email' => $data['email'],
-                'kontakt' => $data['kontakt'] ?? null,
-            ];
+        $stara = $this->aktualnaRola($osoba->id);
 
-            if (!empty($data['password'])) {
-                $updateData['heslo_hash'] = Hash::make($data['password']);
-            }
+        if ($osoba->id === Auth::id() && $data['rola'] !== $stara) {
+            return back()->withErrors(['rola' => 'Nemôžeš zmeniť vlastnú rolu.']);
+        }
 
-            $osoba->update($updateData);
+        try {
+            DB::transaction(function () use ($osoba, $data, $stara) {
+                $updateData = [
+                    'meno' => $data['meno'],
+                    'email' => $data['email'],
+                    'kontakt' => $data['kontakt'] ?? null,
+                ];
+                if (!empty($data['password'])) {
+                    $updateData['heslo_hash'] = Hash::make($data['password']);
+                }
+                $osoba->update($updateData);
 
-            Uzivatel::where('id', $osoba->id)->delete();
-            Moderator::where('id', $osoba->id)->delete();
-            Administrator::where('id', $osoba->id)->delete();
+                if ($data['rola'] !== $stara) {
+                    if ($stara === 'Administrator') {
+                        Administrator::where('id', $osoba->id)->delete();
+                    }
+                    if ($stara !== 'Uzivatel' && $data['rola'] === 'Uzivatel') {
+                        Moderator::where('id', $osoba->id)->delete();
+                    }
 
-            if($data['rola']=='Uzivatel')
-            {
-                Uzivatel::create([
-                    'id' => $osoba->id,
-                    'vek' => $data['vek'] ?? null,
-                    'pohlavie' => $data['pohlavie'] ?? null,
-                ]);
-            }
-            if($data['rola']=='Moderator')
-            {
-                Moderator::create([
-                    'id' => $osoba->id,
-                ]);
-            }
-            if($data['rola']=='Administrator')
-            {
-                Moderator::create([
-                    'id' => $osoba->id,
-                ]);
-                Administrator::create([
-                    'id' => $osoba->id,
-                ]);
-            }
-        });
+                    if (in_array($data['rola'], ['Moderator', 'Administrator'])) {
+                        Moderator::firstOrCreate(['id' => $osoba->id]);
+                    }
+                    if ($data['rola'] === 'Administrator') {
+                        Administrator::firstOrCreate(['id' => $osoba->id]);
+                    }
+                }
+                    Uzivatel::updateOrCreate(
+                        ['id' => $osoba->id],
+                        ['vek' => $data['vek'] ?? null, 'pohlavie' => $data['pohlavie'] ?? null]
+                    );
+            });
+        } catch (QueryException $e) {
+            return back()->withErrors([
+                'rola' => 'Rolu nie je možné zmeniť, lebo osoba má priradené udalosti, schválenia alebo registrácie.',
+            ]);
+        }
 
         return response()->json(['message' => 'Používateľ bol úspešne upravený.']);
     }
@@ -142,12 +133,28 @@ class AdminUserController extends Controller
     public function toggleActive($id)
     {
         $osoba = Osoba::findOrFail($id);
+
+        if ($osoba->id === Auth::id()) {
+            return response()->json(['message' => 'Nemôžeš deaktivovať sám seba.'], 422);
+        }
+
         $osoba->aktivny = !$osoba->aktivny;
         $osoba->save();
 
         return response()->json([
             'message' => 'Stav používateľa bol zmenený.',
-            'aktivny' => $osoba->aktivny
+            'aktivny' => $osoba->aktivny,
         ]);
+    }
+
+    private function aktualnaRola(int $id): string
+    {
+        if (Administrator::where('id', $id)->exists()) {
+            return 'Administrator';
+        }
+        if (Moderator::where('id', $id)->exists()) {
+            return 'Moderator';
+        }
+        return 'Uzivatel';
     }
 }

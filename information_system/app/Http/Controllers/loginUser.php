@@ -32,12 +32,6 @@ class loginUser extends Controller
 
             $request->session()->regenerate();
 
-            $isAdmin = DB::table('Administrator')->where('id', Auth::id())->exists();
-
-            if ($isAdmin) {
-                return redirect()->intended('dashboard');
-            }
-
             return redirect()->intended('dashboard');
         }
 
