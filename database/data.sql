@@ -13,6 +13,9 @@ INSERT INTO Uzivatel (id, vek, pohlavie) VALUES
 (5, 21, 'Žena'),
 (6, 28, 'Muž');
 
+INSERT INTO Uzivatel (id, vek, pohlavie) VALUES (3, NULL, NULL);
+INSERT INTO Uzivatel (id, vek, pohlavie) VALUES (4, NULL, NULL);
+
 
 INSERT INTO Moderator (id) VALUES (3),(4);
 
