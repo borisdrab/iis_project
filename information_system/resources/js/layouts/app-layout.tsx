@@ -1,16 +1,76 @@
-import AppLayoutTemplate from '@/layouts/app/app-sidebar-layout';
-import type { BreadcrumbItem } from '@/types';
+import { Link, usePage } from '@inertiajs/react'
+import '../../css/app-layout.css'
+
+type Osoba = {
+    id: number;
+    meno: string;
+    email: string;
+    aktivny: boolean;
+};
+
+type PageProps = {
+    auth: {
+        user: Osoba | null;
+    };
+};
+
 
 export default function AppLayout({
-    breadcrumbs = [],
     children,
 }: {
-    breadcrumbs?: BreadcrumbItem[];
     children: React.ReactNode;
 }) {
+    const {auth} = usePage<PageProps>().props;
+
     return (
-        <AppLayoutTemplate breadcrumbs={breadcrumbs}>
-            {children}
-        </AppLayoutTemplate>
+        <div className="app-wrapper">
+            <header className="app-header">
+                <div className="app-header-content">
+                    <Link href="/" className="app-logo">
+                        Events
+                    </Link>
+
+                    <nav className="app-nav">
+                        <Link href="/udalosti">Udalosti</Link>
+
+                        {auth.user && (
+                            <Link href="/kalendar">
+                                Moj kalendar
+                            </Link>
+                        )}
+                    </nav>
+
+                    <div className="app-user">
+                        {auth.user ? (
+                            <>
+                                <span>{auth.user.meno}</span>
+
+                                <Link href="/dashboard">
+                                    Profil
+                                </Link>
+                            </>
+                        ) : (
+                            <>
+                                <Link href="/login">
+                                    Prihlasit
+                                </Link>
+
+                                <Link href="/register">
+                                    Registrovat
+                                </Link> 
+                            </>
+                        )}
+                    </div>
+                </div>
+            </header>
+
+            <main className="app-content">
+                {children}
+            </main>
+
+            <footer className="app-footer">
+                IS pre spravu udalosti
+            </footer>
+        </div>
     );
 }

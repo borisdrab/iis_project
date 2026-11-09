@@ -1,3 +1,5 @@
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS Komentar;
 DROP TABLE IF EXISTS Zaplatil;
 DROP TABLE IF EXISTS Registracia;

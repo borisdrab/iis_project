@@ -1,0 +1,80 @@
+.app-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.app-header {
+    background-color: #1f2937;
+    color: white;
+}
+
+.app-header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    min-height: 70px;
+
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.app-logo {
+    color: white;
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.app-nav {
+    display: flex;
+    gap: 25px;
+}
+
+.app-nav a {
+    color: white;
+    text-decoration: none;
+}
+
+.app-nav a:hover {
+    text-decoration: underline;
+}
+
+.app-user {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.app-user a {
+    color: white;
+    text-decoration: none;
+}
+
+.app-content {
+    flex: 1;
+}
+
+.app-footer {
+    margin-top: 40px;
+    padding: 25px;
+    text-align: center;
+    background-color: #1f2937;
+    color: white;
+}
+
+@media (max-width: 700px) {
+    .app-header-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    .app-user {
+        margin-left: 0;
+    }
+}
