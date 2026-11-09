@@ -5,8 +5,18 @@ use App\Http\Controllers\loginUser;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\UdalostController;
+use App\Http\Controllers\MiestoController;
+use App\Http\Controllers\KalendarController;
+use App\Http\Controllers\KomentarController;
+use App\Http\Controllers\UdalostFotoController;
 
 Route::inertia('/', 'welcome')->name('home');
+
+Route::get('/udalosti', [UdalostController::class, 'index'])
+    ->name('udalosti.index');
+
+Route::get('/miesta/{id}', [MiestoController::class, 'show'])
+    ->name('miesta.show');
 
 Route::middleware(['auth'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
@@ -15,6 +25,15 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/udalosti', [UdalostController::class, 'store']);
     Route::get('/udalosti/{udalost}/edit', [UdalostController::class, 'edit']);
     Route::put('/udalosti/{udalost}', [UdalostController::class, 'update']);
+
+    Route::get('/kalendar', [KalendarController::class, 'index'])
+        ->name('kalendar.index');
+
+    Route::post('/udalosti/{id}/komentare', [KomentarController::class, 'store'])
+        ->name('komentare.store');
+
+    Route::post('/udalosti/{id}/foto', [UdalostFotoController::class, 'store'])
+        ->name('udalosti.foto.store');
 
     Route::middleware(['role:Administrator'])->prefix('admin')->group(function () {
         Route::inertia('listOfUsers', 'listOfUsers')->name('listOfUsers');
@@ -26,6 +45,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/logout', [loginUser::class, 'logout']);
 });
+
+Route::get('/udalosti/{id}', [UdalostController::class, 'show'])
+    ->name('udalosti.show');
 
 Route::get('/login', [loginUser::class, 'show'])->name('login');
 Route::post('/login', [loginUser::class, 'authenticate'])->middleware('throttle:10,1');

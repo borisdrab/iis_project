@@ -8,5 +8,12 @@ class Kategorie extends Model
 {
     protected $table = 'Kategorie';
     public $timestamps = false;
-    protected $fillable = ['typ','rodic_id'];
+
+    protected $fillable = [
+        'typ',
+        'rodic_id',
+        'navrhol_id',
+        'stav',
+        'schvalil_id',
+    ];
 }
