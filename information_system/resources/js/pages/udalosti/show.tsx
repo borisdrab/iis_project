@@ -66,7 +66,7 @@ type Props = {
     pocetHodnoteni: number;
 };
 
-export default function Show({ udalost }: Props) {
+export default function Show({ udalost, hodnotenie, pocetHodnoteni }: Props) {
     const { auth } = usePage<{
         auth: {
             user: {
@@ -280,6 +280,27 @@ export default function Show({ udalost }: Props) {
 
                 <section className="udalost-komentare">
                     <h2>Komentáre a hodnotenia</h2>
+
+                    {hodnotenie !== null ? (
+                        <div className="priemerne-hodnotenie">
+                            <span className="priemer-hviezdy">
+                                {'★'.repeat(Math.round(hodnotenie))}
+                                {'☆'.repeat(5 - Math.round(hodnotenie))}
+                            </span>
+
+                            <strong>
+                                {Number(hodnotenie).toFixed(1)} / 5
+                            </strong>
+
+                            <span>
+                                ({pocetHodnoteni} hodnotení)
+                            </span>
+                        </div>
+                    ) : (
+                        <p className="bez-hodnotenia">
+                            Udalosť zatiaľ nemá žiadne hodnotenie.
+                        </p>
+                    )}
 
                     {udalost.komentare.length === 0 ? (
                         <p className="komentare-empty">
