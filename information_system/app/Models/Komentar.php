@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Komentar extends Model
 {
-    protected $table = 'Komentar';
+    protected $table = 'komentar';
 
     public $timestamps = false;
 

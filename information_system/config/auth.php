@@ -64,7 +64,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', Osoba::class),
+            'model' => env('AUTH_MODEL', App\Models\Osoba::class),
         ],
 
         // 'users' => [

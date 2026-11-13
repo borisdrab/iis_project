@@ -68,8 +68,18 @@ class UdalostController extends Controller
             ->where('stav', 'schvalene')
             ->findOrFail($id);
 
+        $hodnotenie = $udalost->komentare()
+            ->whereNotNull('hodnotenie')
+            ->avg('hodnotenie');
+
+        $pocetHodnoteni = $udalost->komentare()
+            ->whereNotNull('hodnotenie')
+            ->count();
+
         return Inertia::render('udalosti/show', [
             'udalost' => $udalost,
+            'hodnotenie' => $hodnotenie,
+            'pocetHodnoteni' => $pocetHodnoteni,
         ]);
     }
 
@@ -126,7 +136,7 @@ class UdalostController extends Controller
         $data = $request->validate($this->pravidla($udalost->id));
         $this->skontrolujCas($data);
 
-        $pocet = DB::table('Registracia')->where('udalost_id', $udalost->id)->count();
+        $pocet = DB::table('registracia')->where('udalost_id', $udalost->id)->count();
         if (isset($data['kapacita']) && $data['kapacita'] < $pocet) {
             throw ValidationException::withMessages([
                 'kapacita' => "Kapacita nemôže byť nižšia ako počet registrácií ($pocet).",
@@ -158,7 +168,7 @@ class UdalostController extends Controller
 
             Vstupne::where('udalost_id', $udalost->id)
                 ->whereNotIn('id', $ponechane)
-                ->whereNotIn('id', DB::table('Registracia')->whereNotNull('vstupne_id')->select('vstupne_id'))
+                ->whereNotIn('id', DB::table('registracia')->whereNotNull('vstupne_id')->select('vstupne_id'))
                 ->delete();
         });
 
@@ -182,7 +192,7 @@ class UdalostController extends Controller
     private function pravidla(?int $ignorujId = null): array
     {
         return [
-            'oznacenie' => ['required', 'string', 'max:150', Rule::unique('Udalost', 'oznacenie')->ignore($ignorujId)],
+            'oznacenie' => ['required', 'string', 'max:150', Rule::unique('udalost', 'oznacenie')->ignore($ignorujId)],
             'datum_od' => ['required', 'date'],
             'cas_od' => ['required', 'date_format:H:i'],
             'datum_do' => ['required', 'date', 'after_or_equal:datum_od'],
@@ -191,8 +201,8 @@ class UdalostController extends Controller
             'kapacita' => ['nullable', 'integer', 'min:1'],
             'popis' => ['nullable', 'string'],
             'ikona' => ['nullable', 'string', 'max:255'],
-            'miesto_id' => ['required', Rule::exists('Miesto', 'id')->where('stav', 'schvalene')],
-            'kategoria_id' => ['required', Rule::exists('Kategorie', 'id')->where('stav', 'schvalene')],
+            'miesto_id' => ['required', Rule::exists('miesto', 'id')->where('stav', 'schvalene')],
+            'kategoria_id' => ['required', Rule::exists('kategorie', 'id')->where('stav', 'schvalene')],
             'vstupne' => ['nullable', 'array'],
             'vstupne.*.id' => ['nullable', 'integer'],
             'vstupne.*.typ' => ['required', 'string', 'max:100'],

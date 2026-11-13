@@ -1,120 +1,229 @@
-import { Form, Head } from '@inertiajs/react';
-import InputError from '@/components/input-error';
-import PasswordInput from '@/components/password-input';
-import TextLink from '@/components/text-link';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
-import { login } from '@/routes';
-import { store } from '@/routes/register';
+import { Head, Link, useForm } from '@inertiajs/react';
+import type { SyntheticEvent } from 'react';
+import '../../../css/auth.css';
 
-type Props = {
-    passwordRules: string;
-};
+export default function Register() {
+    const {
+        data,
+        setData,
+        post,
+        processing,
+        errors,
+    } = useForm({
+        meno: '',
+        email: '',
+        kontakt: '',
+        vek: '',
+        pohlavie: '',
+        password: '',
+        password_confirmation: '',
+    });
 
-export default function Register({ passwordRules }: Props) {
+    function submit(event: SyntheticEvent<HTMLFormElement>) {
+        event.preventDefault();
+
+        post('/register');
+    }
+
     return (
         <>
-            <Head title="Register" />
-            <Form
-                {...store.form()}
-                resetOnSuccess={['password', 'password_confirmation']}
-                disableWhileProcessing
-                className="flex flex-col gap-6"
-            >
-                {({ processing, errors }) => (
-                    <>
-                        <div className="grid gap-6">
-                            <div className="grid gap-2">
-                                <Label htmlFor="name">Name</Label>
-                                <Input
-                                    id="name"
-                                    type="text"
-                                    required
-                                    autoFocus
-                                    tabIndex={1}
-                                    autoComplete="name"
-                                    name="name"
-                                    placeholder="Full name"
-                                />
-                                <InputError
-                                    message={errors.name}
-                                    className="mt-2"
-                                />
-                            </div>
+            <Head title="Registrácia" />
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    required
-                                    tabIndex={2}
-                                    autoComplete="email"
-                                    name="email"
-                                    placeholder="email@example.com"
-                                />
-                                <InputError message={errors.email} />
-                            </div>
+            <main className="auth-page">
+                <div className="auth-card auth-card-wide">
+                    <div className="auth-heading">
+                        <h1>Vytvoriť účet</h1>
+                        <p>
+                            Vyplňte svoje údaje a vytvorte si účet.
+                        </p>
+                    </div>
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="password">Password</Label>
-                                <PasswordInput
-                                    id="password"
-                                    required
-                                    tabIndex={3}
-                                    autoComplete="new-password"
-                                    name="password"
-                                    placeholder="Password"
-                                    passwordrules={passwordRules}
-                                />
-                                <InputError message={errors.password} />
-                            </div>
+                    <form onSubmit={submit} className="auth-form">
+                        <div className="auth-field">
+                            <label htmlFor="meno">
+                                Meno
+                            </label>
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="password_confirmation">
-                                    Confirm password
-                                </Label>
-                                <PasswordInput
-                                    id="password_confirmation"
-                                    required
-                                    tabIndex={4}
-                                    autoComplete="new-password"
-                                    name="password_confirmation"
-                                    placeholder="Confirm password"
-                                    passwordrules={passwordRules}
-                                />
-                                <InputError
-                                    message={errors.password_confirmation}
-                                />
-                            </div>
+                            <input
+                                id="meno"
+                                type="text"
+                                value={data.meno}
+                                onChange={(event) =>
+                                    setData('meno', event.target.value)
+                                }
+                                required
+                            />
 
-                            <Button
-                                type="submit"
-                                className="mt-2 w-full"
-                                tabIndex={5}
-                                data-test="register-user-button"
-                            >
-                                {processing && <Spinner />}
-                                Create account
-                            </Button>
+                            {errors.meno && (
+                                <p className="auth-error">
+                                    {errors.meno}
+                                </p>
+                            )}
                         </div>
 
-                        <div className="text-center text-sm text-muted-foreground">
-                            Already have an account?{' '}
-                            <TextLink href={login()} tabIndex={6}>
-                                Log in
-                            </TextLink>
+                        <div className="auth-field">
+                            <label htmlFor="email">
+                                E-mail
+                            </label>
+
+                            <input
+                                id="email"
+                                type="email"
+                                value={data.email}
+                                onChange={(event) =>
+                                    setData('email', event.target.value)
+                                }
+                                required
+                            />
+
+                            {errors.email && (
+                                <p className="auth-error">
+                                    {errors.email}
+                                </p>
+                            )}
                         </div>
-                    </>
-                )}
-            </Form>
+
+                        <div className="auth-field">
+                            <label htmlFor="kontakt">
+                                Kontakt
+                            </label>
+
+                            <input
+                                id="kontakt"
+                                type="text"
+                                value={data.kontakt}
+                                onChange={(event) =>
+                                    setData('kontakt', event.target.value)
+                                }
+                                placeholder="Nepovinné"
+                            />
+
+                            {errors.kontakt && (
+                                <p className="auth-error">
+                                    {errors.kontakt}
+                                </p>
+                            )}
+                        </div>
+
+                        <div className="auth-row">
+                            <div className="auth-field">
+                                <label htmlFor="vek">
+                                    Vek
+                                </label>
+
+                                <input
+                                    id="vek"
+                                    type="number"
+                                    min="0"
+                                    max="110"
+                                    value={data.vek}
+                                    onChange={(event) =>
+                                        setData('vek', event.target.value)
+                                    }
+                                    placeholder="Nepovinné"
+                                />
+
+                                {errors.vek && (
+                                    <p className="auth-error">
+                                        {errors.vek}
+                                    </p>
+                                )}
+                            </div>
+
+                            <div className="auth-field">
+                                <label htmlFor="pohlavie">
+                                    Pohlavie
+                                </label>
+
+                                <select
+                                    id="pohlavie"
+                                    value={data.pohlavie}
+                                    onChange={(event) =>
+                                        setData(
+                                            'pohlavie',
+                                            event.target.value
+                                        )
+                                    }
+                                >
+                                    <option value="">
+                                        Neuvedené
+                                    </option>
+                                    <option value="Muž">
+                                        Muž
+                                    </option>
+                                    <option value="Žena">
+                                        Žena
+                                    </option>
+                                </select>
+
+                                {errors.pohlavie && (
+                                    <p className="auth-error">
+                                        {errors.pohlavie}
+                                    </p>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="auth-field">
+                            <label htmlFor="password">
+                                Heslo
+                            </label>
+
+                            <input
+                                id="password"
+                                type="password"
+                                value={data.password}
+                                onChange={(event) =>
+                                    setData('password', event.target.value)
+                                }
+                                required
+                            />
+
+                            {errors.password && (
+                                <p className="auth-error">
+                                    {errors.password}
+                                </p>
+                            )}
+                        </div>
+
+                        <div className="auth-field">
+                            <label htmlFor="password_confirmation">
+                                Zopakujte heslo
+                            </label>
+
+                            <input
+                                id="password_confirmation"
+                                type="password"
+                                value={data.password_confirmation}
+                                onChange={(event) =>
+                                    setData(
+                                        'password_confirmation',
+                                        event.target.value
+                                    )
+                                }
+                                required
+                            />
+                        </div>
+
+                        <button
+                            type="submit"
+                            className="auth-button"
+                            disabled={processing}
+                        >
+                            {processing
+                                ? 'Vytvára sa účet...'
+                                : 'Registrovať sa'}
+                        </button>
+                    </form>
+
+                    <p className="auth-switch">
+                        Už máte účet?{' '}
+                        <Link href="/login">
+                            Prihláste sa
+                        </Link>
+                    </p>
+                </div>
+            </main>
         </>
     );
 }
-
-Register.layout = {
-    title: 'Create an account',
-    description: 'Enter your details below to create your account',
-};

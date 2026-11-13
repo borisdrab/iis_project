@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
+use Inertia\Response;
+
 class loginUser extends Controller
 {
-    public function show(Request $request)
+    public function show(Request $request) : Response
     {
-        //frontend
+        return Inertia::render('auth/login');
     }
 
     public function authenticate(Request $request)

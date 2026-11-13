@@ -20,6 +20,20 @@
     font-size: 36px;
 }
 
+.udalost-edit-button {
+    display: inline-block;
+    margin: 10px 0 20px;
+    padding: 10px 18px;
+
+    color: white;
+    background-color: black;
+
+    border-radius: 7px;
+
+    text-decoration: none;
+    font-weight: 600;
+}
+
 .udalost-kategoria {
     margin-bottom: 30px;
     color: #666666;
@@ -126,6 +140,21 @@
     border-bottom: 1px solid #eeeeee;
 }
 
+.udalost-actions {
+    margin: 25px 0;
+}
+
+.udalost-actions button {
+    padding: 12px 20px;
+    color: white;
+    background-color: black;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+}
+
 .galeria-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -141,6 +170,29 @@
 
 .udalost-komentare {
     margin-top: 30px;
+}
+
+.priemerne-hodnotenie {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin-bottom: 20px;
+    padding: 15px;
+
+    background-color: #f7f7f7;
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+}
+
+.priemer-hviezdy {
+    font-size: 22px;
+    letter-spacing: 2px;
+}
+
+.bez-hodnotenia {
+    margin-bottom: 20px;
+    color: #666666;
 }
 
 .komentare-empty {

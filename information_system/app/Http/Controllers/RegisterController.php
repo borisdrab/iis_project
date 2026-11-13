@@ -15,7 +15,7 @@ class RegisterController extends Controller
     {
         $data = $request->validate([
             'meno' => ['required', 'string', 'max:100'],
-            'email' => ['required', 'email', 'max:255', 'unique:Osoba,email'],
+            'email' => ['required', 'email', 'max:255', 'unique:osoba,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'kontakt' => ['nullable', 'string', 'max:255'],
             'vek' => ['nullable', 'integer', 'between:0,110'],

@@ -20,7 +20,7 @@ class KomentarController extends Controller
         $now = new \DateTime();
 
         if ($now < $end) {
-            return back()->withErrors(['komentar' => 'Komentáre je možné pridávať až po skončení udalosti.']);
+            return back()->withErrors(['text' => 'Komentáre je možné pridávať až po skončení udalosti.']);
         }
 
         $uzivatelId = Auth::id();

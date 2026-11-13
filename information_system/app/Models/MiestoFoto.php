@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class MiestoFoto extends Model
 {
-    protected $table = 'MiestoFoto';
+    protected $table = 'miestofoto';
 
     public $timestamps = false;
 

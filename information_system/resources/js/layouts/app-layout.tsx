@@ -38,6 +38,12 @@ export default function AppLayout({
                                 Moj kalendar
                             </Link>
                         )}
+
+                        {auth.user && (
+                            <Link href="/udalosti/create">
+                                Vytvoriť udalosť
+                            </Link>
+                        )}
                     </nav>
 
                     <div className="app-user">

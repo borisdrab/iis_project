@@ -42,9 +42,9 @@ class HandleInertiaRequests extends Middleware
             'name' => config('app.name'),
             'auth' => [
                 'user' => $request->user(),
-                'isUser' => $id && DB::table('Uzivatel')->where('id', $id)->exists(),
-                'isModerator' => $id && DB::table('Moderator')->where('id', $id)->exists(),
-                'isAdmin' => $id && DB::table('Administrator')->where('id', $id)->exists(),
+                'isUser' => $id && DB::table('uzivatel')->where('id', $id)->exists(),
+                'isModerator' => $id && DB::table('moderator')->where('id', $id)->exists(),
+                'isAdmin' => $id && DB::table('administrator')->where('id', $id)->exists(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];

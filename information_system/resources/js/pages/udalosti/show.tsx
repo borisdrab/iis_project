@@ -62,6 +62,8 @@ type Udalost = {
 
 type Props = {
     udalost: Udalost;
+    hodnotenie: number | null;
+    pocetHodnoteni: number;
 };
 
 export default function Show({ udalost }: Props) {
@@ -142,6 +144,15 @@ export default function Show({ udalost }: Props) {
                     {udalost.oznacenie}
                 </h1>
 
+                {auth.user?.id === udalost.zakladatel_id && (
+                    <Link
+                        href={`/udalosti/${udalost.id}/edit`}
+                        className="udalost-edit-button"
+                    >
+                        Upraviť udalosť
+                    </Link>
+                )}
+
                 <p className="udalost-kategoria">
                     {udalost.kategoria?.typ ?? 'Bez kategórie'}
                 </p>
@@ -204,6 +215,14 @@ export default function Show({ udalost }: Props) {
                             ))}
                         </div>
                     </section>
+                )}
+
+                {auth.user && (
+                    <div className="udalost-actions">
+                        <button type="button">
+                            Prihlásiť sa na udalosť
+                        </button>
+                    </div>
                 )}
 
                 {auth.user?.id === udalost.zakladatel_id && (

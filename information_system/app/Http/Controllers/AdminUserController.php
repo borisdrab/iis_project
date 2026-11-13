@@ -16,17 +16,17 @@ class AdminUserController extends Controller
 {
     public function index()
     {
-        $osoby = DB::table('Osoba')
-            ->leftJoin('Uzivatel', 'Osoba.id', '=', 'Uzivatel.id')
-            ->leftJoin('Moderator', 'Osoba.id', '=', 'Moderator.id')
-            ->leftJoin('Administrator', 'Osoba.id', '=', 'Administrator.id')
+        $osoby = DB::table('osoba')
+            ->leftJoin('uzivatel', 'osoba.id', '=', 'uzivatel.id')
+            ->leftJoin('moderator', 'osoba.id', '=', 'moderator.id')
+            ->leftJoin('administrator', 'osoba.id', '=', 'administrator.id')
             ->select(
-                'Osoba.id', 'Osoba.meno', 'Osoba.email', 'Osoba.aktivny',
-                DB::raw('Uzivatel.id IS NOT NULL AS is_user'),
-                DB::raw('Moderator.id IS NOT NULL AS is_moderator'),
-                DB::raw('Administrator.id IS NOT NULL AS is_admin')
+                'osoba.id', 'osoba.meno', 'osoba.email', 'osoba.aktivny',
+                DB::raw('uzivatel.id IS NOT NULL AS is_user'),
+                DB::raw('moderator.id IS NOT NULL AS is_moderator'),
+                DB::raw('administrator.id IS NOT NULL AS is_admin')
             )
-            ->orderBy('Osoba.id')
+            ->orderBy('osoba.id')
             ->get();
 
         return response()->json($osoby);

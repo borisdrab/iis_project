@@ -51,4 +51,5 @@ Route::get('/udalosti/{id}', [UdalostController::class, 'show'])
 
 Route::get('/login', [loginUser::class, 'show'])->name('login');
 Route::post('/login', [loginUser::class, 'authenticate'])->middleware('throttle:10,1');
+Route::inertia('/register', 'auth/register')->name('register');
 Route::post('/register', [RegisterController::class, 'store'])->middleware('throttle:10,1');

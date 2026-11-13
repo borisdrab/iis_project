@@ -1,125 +1,109 @@
-import { Form, Head } from '@inertiajs/react';
-import InputError from '@/components/input-error';
-import PasswordInput from '@/components/password-input';
-import TextLink from '@/components/text-link';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
-/* @chisel-registration */
-import { register } from '@/routes';
-/* @end-chisel-registration */
-import { store } from '@/routes/login';
-import { request } from '@/routes/password';
-/* @chisel-passkeys */
-import PasskeyVerify from '@/components/passkey-verify';
-/* @end-chisel-passkeys */
+import { Head, Link, useForm } from '@inertiajs/react';
+import type { SyntheticEvent } from 'react';
+import '../../../css/auth.css';
 
-type Props = {
-    status?: string;
-    canResetPassword: boolean;
-};
+export default function Login() {
+    const {
+        data,
+        setData,
+        post,
+        processing,
+        errors,
+    } = useForm({
+        email: '',
+        password: '',
+    });
 
-export default function Login({ status, canResetPassword }: Props) {
+    function submit(event: SyntheticEvent<HTMLFormElement>) {
+        event.preventDefault();
+
+        post('/login');
+    }
+
     return (
         <>
-            <Head title="Log in" />
+            <Head title="Prihlásenie" />
 
-            {/* @chisel-passkeys */}
-            <PasskeyVerify />
-            {/* @end-chisel-passkeys */}
+            <main className="auth-page">
+                <div className="auth-card">
+                    <div className="auth-heading">
+                        <h1>Prihlásenie</h1>
+                        <p>
+                            Prihlás sa do svojho účtu.
+                        </p>
+                    </div>
 
-            <Form
-                {...store.form()}
-                resetOnSuccess={['password']}
-                className="flex flex-col gap-6"
-            >
-                {({ processing, errors }) => (
-                    <>
-                        <div className="grid gap-6">
-                            <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    name="email"
-                                    required
-                                    autoFocus
-                                    tabIndex={1}
-                                    autoComplete="email"
-                                    placeholder="email@example.com"
-                                />
-                                <InputError message={errors.email} />
-                            </div>
+                    <form onSubmit={submit} className="auth-form">
+                        <div className="auth-field">
+                            <label htmlFor="email">
+                                E-mail
+                            </label>
 
-                            <div className="grid gap-2">
-                                <div className="flex items-center">
-                                    <Label htmlFor="password">Password</Label>
-                                    {canResetPassword && (
-                                        <TextLink
-                                            href={request()}
-                                            className="ml-auto text-sm"
-                                            tabIndex={5}
-                                        >
-                                            Forgot your password?
-                                        </TextLink>
-                                    )}
-                                </div>
-                                <PasswordInput
-                                    id="password"
-                                    name="password"
-                                    required
-                                    tabIndex={2}
-                                    autoComplete="current-password"
-                                    placeholder="Password"
-                                />
-                                <InputError message={errors.password} />
-                            </div>
+                            <input
+                                id="email"
+                                type="email"
+                                value={data.email}
+                                onChange={(event) =>
+                                    setData('email', event.target.value)
+                                }
+                                required
+                                autoFocus
+                                placeholder="email@example.com"
+                            />
 
-                            <div className="flex items-center space-x-3">
-                                <Checkbox
-                                    id="remember"
-                                    name="remember"
-                                    tabIndex={3}
-                                />
-                                <Label htmlFor="remember">Remember me</Label>
-                            </div>
-
-                            <Button
-                                type="submit"
-                                className="mt-4 w-full"
-                                tabIndex={4}
-                                disabled={processing}
-                                data-test="login-button"
-                            >
-                                {processing && <Spinner />}
-                                Log in
-                            </Button>
+                            {errors.email && (
+                                <p className="auth-error">
+                                    {errors.email}
+                                </p>
+                            )}
                         </div>
 
-                        {/* @chisel-registration */}
-                        <div className="text-center text-sm text-muted-foreground">
-                            Don't have an account?{' '}
-                            <TextLink href={register()} tabIndex={5}>
-                                Sign up
-                            </TextLink>
-                        </div>
-                        {/* @end-chisel-registration */}
-                    </>
-                )}
-            </Form>
+                        <div className="auth-field">
+                            <label htmlFor="password">
+                                Heslo
+                            </label>
 
-            {status && (
-                <div className="mb-4 text-center text-sm font-medium text-green-600">
-                    {status}
+                            <input
+                                id="password"
+                                type="password"
+                                value={data.password}
+                                onChange={(event) =>
+                                    setData('password', event.target.value)
+                                }
+                                required
+                                placeholder="Heslo"
+                            />
+
+                            {errors.password && (
+                                <p className="auth-error">
+                                    {errors.password}
+                                </p>
+                            )}
+                        </div>
+
+                        <button
+                            type="submit"
+                            className="auth-button"
+                            disabled={processing}
+                        >
+                            {processing
+                                ? 'Prihlasujem...'
+                                : 'Prihlásiť sa'}
+                        </button>
+                    </form>
+
+                    <p className="auth-switch">
+                        Nemáte účet?{' '}
+                        <Link href="/register">
+                            Zaregistrujte sa
+                        </Link>
+                    </p>
+
+                    <Link href="/" className="auth-back">
+                        ← Späť na úvod
+                    </Link>
                 </div>
-            )}
+            </main>
         </>
     );
 }
-
-Login.layout = {
-    title: 'Log in to your account',
-    description: 'Enter your email and password below to log in',
-};

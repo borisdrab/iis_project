@@ -152,7 +152,7 @@ export default function Index({ udalosti, kategorie, filters }: Props) {
 
                 {udalosti.length === 0 ? (
                     <p className="udalosti-empty">
-                        Momentálne nie sú dostupné žiadne udalosti.
+                        Nenašli sa žiadne udalosti.
                     </p>
                 ) : (
                     <div className="udalosti-grid">
