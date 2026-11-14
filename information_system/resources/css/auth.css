@@ -1,0 +1,158 @@
+.auth-page {
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 40px 20px;
+
+    background-color: #f5f5f5;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 430px;
+
+    padding: 35px;
+
+    background-color: white;
+
+    border: 1px solid #dddddd;
+    border-radius: 12px;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.auth-card-wide {
+    max-width: 550px;
+}
+
+.auth-heading {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.auth-heading h1 {
+    margin: 0 0 8px;
+
+    font-size: 30px;
+}
+
+.auth-heading p {
+    margin: 0;
+    color: #666666;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.auth-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+
+    width: 100%;
+}
+
+.auth-field label {
+    font-weight: 600;
+}
+
+.auth-field input,
+.auth-field select {
+    width: 100%;
+
+    padding: 11px 12px;
+
+    font: inherit;
+
+    border: 1px solid #cccccc;
+    border-radius: 7px;
+
+    background-color: white;
+}
+
+.auth-field input:focus,
+.auth-field select:focus {
+    outline: none;
+    border-color: #555555;
+}
+
+.auth-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.auth-button {
+    margin-top: 8px;
+    padding: 12px;
+
+    font: inherit;
+    font-weight: 600;
+
+    color: white;
+    background-color: #1f2937;
+
+    border: none;
+    border-radius: 7px;
+
+    cursor: pointer;
+}
+
+.auth-button:hover {
+    background-color: #374151;
+}
+
+.auth-button:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.auth-error {
+    margin: 0;
+
+    font-size: 14px;
+    color: #b00020;
+}
+
+.auth-switch {
+    margin: 25px 0 0;
+    text-align: center;
+    color: #666666;
+}
+
+.auth-switch a,
+.auth-back {
+    color: #1f2937;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.auth-switch a:hover,
+.auth-back:hover {
+    text-decoration: underline;
+}
+
+.auth-back {
+    display: block;
+
+    margin-top: 20px;
+
+    text-align: center;
+    font-weight: normal;
+}
+
+@media (max-width: 600px) {
+    .auth-card {
+        padding: 25px 20px;
+    }
+
+    .auth-row {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,3 +1,5 @@
+SET client_encoding = 'UTF8';
+
 DROP TABLE IF EXISTS Komentar CASCADE;
 DROP TABLE IF EXISTS Zaplatil CASCADE;
 DROP TABLE IF EXISTS Registracia CASCADE;

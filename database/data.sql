@@ -1,3 +1,5 @@
+SET client_encoding = 'UTF8';
+
 INSERT INTO Osoba (id, meno, kontakt, email, heslo_hash, aktivny) VALUES
 (1, 'Ján Novák', '+421900111111', 'jan.novak@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', TRUE),
 (2, 'Petra Horváthová', '+421900222222', 'petra.horvathova@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', TRUE),

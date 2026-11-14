@@ -6,7 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Vstupne extends Model
 {
-    protected $table = 'Vstupne';
+    protected $table = 'vstupne';
+
     public $timestamps = false;
-    protected $fillable = ['cennik','typ','udalost_id'];
+
+    protected $fillable = [
+        'cennik',
+        'typ',
+        'udalost_id',
+    ];
 }
