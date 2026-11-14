@@ -8,6 +8,7 @@
     padding: 40px 20px;
 
     background-color: #f5f5f5;
+    color: black;
 }
 
 .auth-card {
@@ -128,7 +129,7 @@
 
 .auth-switch a,
 .auth-back {
-    color: #1f2937;
+    color: black;
     font-weight: 600;
     text-decoration: none;
 }

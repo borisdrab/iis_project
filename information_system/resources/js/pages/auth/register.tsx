@@ -222,6 +222,10 @@ export default function Register() {
                             Prihláste sa
                         </Link>
                     </p>
+
+                    <Link href="/" className="auth-back">
+                        ← Späť
+                    </Link>
                 </div>
             </main>
         </>
