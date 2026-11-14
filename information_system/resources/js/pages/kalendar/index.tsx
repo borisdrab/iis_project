@@ -109,7 +109,7 @@ export default function Index({ registracie }: Props) {
                         </p>
 
                         <Link
-                            href="/udalosti"
+                            href="/"
                             className="kalendar-events-link"
                         >
                             Prezrieť udalosti

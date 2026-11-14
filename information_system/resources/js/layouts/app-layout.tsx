@@ -31,11 +31,11 @@ export default function AppLayout({
                     </Link>
 
                     <nav className="app-nav">
-                        <Link href="/udalosti">Udalosti</Link>
+                        <Link href="/">Udalosti</Link>
 
                         {auth.user && (
                             <Link href="/kalendar">
-                                Moj kalendar
+                                Môj kalendár
                             </Link>
                         )}
 
@@ -51,18 +51,21 @@ export default function AppLayout({
                             <>
                                 <span>{auth.user.meno}</span>
 
-                                <Link href="/dashboard">
-                                    Profil
+                                <Link href="/logout"
+                                    method="post"
+                                    as="button"
+                                >
+                                    Odhlásiť sa
                                 </Link>
                             </>
                         ) : (
                             <>
                                 <Link href="/login">
-                                    Prihlasit
+                                    Prihlásiť
                                 </Link>
 
                                 <Link href="/register">
-                                    Registrovat
+                                    Registrovať
                                 </Link>
                             </>
                         )}
@@ -75,7 +78,7 @@ export default function AppLayout({
             </main>
 
             <footer className="app-footer">
-                IS pre spravu udalosti
+                IS pre správu udalostí
             </footer>
         </div>
     );

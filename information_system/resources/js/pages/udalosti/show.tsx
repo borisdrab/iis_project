@@ -134,7 +134,7 @@ export default function Show({ udalost, hodnotenie, pocetHodnoteni }: Props) {
 
             <main className="udalost-container">
                 <Link
-                    href="/udalosti"
+                    href="/"
                     className="udalost-back-link"
                 >
                     ← Späť na udalosti
@@ -414,6 +414,7 @@ export default function Show({ udalost, hodnotenie, pocetHodnoteni }: Props) {
 
                             <button
                                 type="submit"
+                                className="komentar-submit"
                                 disabled={processing}
                             >
                                 {processing

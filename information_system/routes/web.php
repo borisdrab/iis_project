@@ -10,17 +10,13 @@ use App\Http\Controllers\KalendarController;
 use App\Http\Controllers\KomentarController;
 use App\Http\Controllers\UdalostFotoController;
 
-Route::inertia('/', 'welcome')->name('home');
-
-Route::get('/udalosti', [UdalostController::class, 'index'])
-    ->name('udalosti.index');
+Route::get('/', [UdalostController::class, 'index'])
+    ->name('home');
 
 Route::get('/miesta/{id}', [MiestoController::class, 'show'])
     ->name('miesta.show');
 
 Route::middleware(['auth'])->group(function () {
-    Route::inertia('dashboard', 'dashboard')->name('dashboard');
-
     Route::get('/udalosti/create', [UdalostController::class, 'create']);
     Route::post('/udalosti', [UdalostController::class, 'store']);
     Route::get('/udalosti/{udalost}/edit', [UdalostController::class, 'edit']);

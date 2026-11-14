@@ -56,7 +56,7 @@ export default function Index({ udalosti, kategorie, filters }: Props) {
             params.kategoria = kategoria;
         }
 
-        router.get('/udalosti', params, {
+        router.get('/', params, {
             preserveState: true,
             preserveScroll: true,
             replace: true,
@@ -67,7 +67,7 @@ export default function Index({ udalosti, kategorie, filters }: Props) {
         setSearch('');
         setKategoria('');
 
-        router.get('/udalosti');
+        router.get('/');
     }
 
     function renderCategoryOptions(

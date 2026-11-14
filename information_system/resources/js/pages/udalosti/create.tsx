@@ -125,7 +125,7 @@ export default function Create({
                 <div className="udalost-form-header">
                     <div>
                         <Link
-                            href="/udalosti"
+                            href="/"
                             className="udalost-form-back"
                         >
                             ← Späť na udalosti
@@ -593,7 +593,7 @@ export default function Create({
 
                     <div className="udalost-form-actions">
                         <Link
-                            href="/udalosti"
+                            href="/"
                             className="cancel-button"
                         >
                             Zrušiť
