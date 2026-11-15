@@ -1,0 +1,127 @@
+.admin-users-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.admin-users-container h1 {
+    margin-bottom: 8px;
+    font-size: 36px;
+}
+
+.admin-users-description {
+    margin-bottom: 30px;
+    color: #666666;
+}
+
+.admin-users-table-wrapper {
+    overflow-x: auto;
+
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+
+    background-color: white;
+}
+
+.admin-users-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-users-table th,
+.admin-users-table td {
+    padding: 16px;
+    text-align: left;
+
+    border-bottom: 1px solid #eeeeee;
+}
+
+.admin-users-table th {
+    background-color: #f5f5f5;
+    font-weight: 600;
+}
+
+.admin-users-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-users-table select {
+    min-width: 150px;
+    padding: 8px 10px;
+
+    background-color: white;
+    color: #111111;
+
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+}
+
+.admin-users-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.admin-users-actions button {
+    padding: 8px 14px;
+
+    border: none;
+    border-radius: 6px;
+
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.admin-users-actions button:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.admin-save-button {
+    background-color: black;
+    color: white;
+}
+
+.admin-disable-button {
+    background-color: #b91c1c;
+    color: white;
+}
+
+.admin-enable-button {
+    background-color: #15803d;
+    color: white;
+}
+
+.user-active {
+    color: #15803d;
+    font-weight: 600;
+}
+
+.user-inactive {
+    color: #b91c1c;
+    font-weight: 600;
+}
+
+.admin-users-success {
+    margin-bottom: 20px;
+    padding: 12px 15px;
+
+    background-color: #dcfce7;
+    color: #166534;
+
+    border-radius: 7px;
+}
+
+.admin-users-error {
+    margin-bottom: 20px;
+    padding: 12px 15px;
+
+    background-color: #fee2e2;
+    color: #991b1b;
+
+    border-radius: 7px;
+}
+
+.admin-users-you {
+    color: #666666;
+    font-size: 14px;
+}

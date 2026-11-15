@@ -11,6 +11,9 @@ type Osoba = {
 type PageProps = {
     auth: {
         user: Osoba | null;
+        isUser: boolean;
+        isModerator: boolean;
+        isAdmin: boolean;
     };
 };
 
@@ -42,6 +45,12 @@ export default function AppLayout({
                         {auth.user && (
                             <Link href="/udalosti/create">
                                 Vytvoriť udalosť
+                            </Link>
+                        )}
+
+                        {auth.isAdmin && (
+                            <Link href="/admin/listOfUsers">
+                                Správa používateľov
                             </Link>
                         )}
                     </nav>

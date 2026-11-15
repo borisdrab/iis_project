@@ -17,7 +17,7 @@ class CheckRole
     public function handle(Request $request, Closure $next, string $role): Response
     {
         $id=Auth::id();
-        $table=DB::table($role);
+        $table=DB::table(strtolower($role));
         if(!$table->where('id',$id)->exists())
             {
                 abort(403);
