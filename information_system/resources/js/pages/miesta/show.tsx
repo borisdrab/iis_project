@@ -35,7 +35,7 @@ export default function Show({miesto}: Props) {
             <Head title={miesto.adresa} />
 
             <main className="miesto-container">
-                <Link href="/udalosti">
+                <Link href="/">
                     ← Späť na udalosti
                 </Link>
 

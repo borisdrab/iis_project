@@ -291,6 +291,21 @@
     color: #b00020;
 }
 
+.komentar-submit {
+    padding: 12px 20px;
+    color: white;
+    background-color: black;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.komentar-submit:disabled {
+    cursor: not-allowed;
+}
+
 @media (max-width: 700px) {
     .galeria-grid {
         grid-template-columns: 1fr;

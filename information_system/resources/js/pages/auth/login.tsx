@@ -100,7 +100,7 @@ export default function Login() {
                     </p>
 
                     <Link href="/" className="auth-back">
-                        ← Späť na úvod
+                        ← Späť
                     </Link>
                 </div>
             </main>
