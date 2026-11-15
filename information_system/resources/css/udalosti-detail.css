@@ -2,12 +2,16 @@
     max-width: 900px;
     margin: 0 auto;
     padding: 40px 20px;
+
+    color: black;
 }
 
 .udalost-back-link {
     display: inline-block;
+
     margin-bottom: 25px;
-    color: #2563eb;
+
+    color: black;
     text-decoration: none;
 }
 
@@ -16,17 +20,22 @@
 }
 
 .udalost-oznacenie {
-    margin-bottom: 10px;
+    margin: 0 0 10px;
+
     font-size: 36px;
+    font-weight: 700;
+
+    color: black;
 }
 
 .udalost-edit-button {
     display: inline-block;
+
     margin: 10px 0 20px;
-    padding: 10px 18px;
+    padding: 11px 18px;
 
     color: white;
-    background-color: black;
+    background-color: #2563eb;
 
     border-radius: 7px;
 
@@ -34,26 +43,43 @@
     font-weight: 600;
 }
 
+.udalost-edit-button:hover {
+    background-color: #1d4ed8;
+}
+
 .udalost-kategoria {
     margin-bottom: 30px;
+
     color: #666666;
 }
 
-.udalostinfo {
+.udalost-info {
     display: grid;
     gap: 12px;
+
     margin-bottom: 35px;
     padding: 20px;
+
+    background-color: white;
+
     border: 1px solid #dddddd;
     border-radius: 10px;
-    background-color: white;
+}
+
+.udalost-container h2 {
+    font-size: 22px;
+    font-weight: 700;
+
+    color: black;
 }
 
 .udalost-popis {
     padding: 20px;
+
+    background-color: white;
+
     border: 1px solid #dddddd;
     border-radius: 10px;
-    background-color: white;
 }
 
 .udalost-popis h2 {
@@ -88,36 +114,52 @@
 .udalost-upload input[type="file"] {
     padding: 10px;
 
-    border: 1px solid #cccccc;
+    color: black;
+    background-color: white;
+
+    border: 1px solid #dddddd;
     border-radius: 7px;
 }
 
 .udalost-upload button {
-    padding: 10px 18px;
+    padding: 11px 18px;
+
+    color: white;
+    background-color: #2563eb;
 
     border: none;
     border-radius: 7px;
 
+    font: inherit;
+    font-weight: 600;
+
     cursor: pointer;
 }
 
+.udalost-upload button:hover:not(:disabled) {
+    background-color: #1d4ed8;
+}
+
 .udalost-upload button:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: default;
 }
 
 .foto-error {
     margin: 0;
 
-    color: #b00020;
     font-size: 14px;
+
+    color: #666666;
 }
 
 .udalost-vstupne,
 .udalost-galeria {
     margin-top: 30px;
     padding: 20px;
+
     background-color: white;
+
     border: 1px solid #dddddd;
     border-radius: 10px;
 }
@@ -125,6 +167,9 @@
 .udalost-vstupne h2,
 .udalost-galeria h2 {
     margin-top: 0;
+
+    font-size: 22px;
+    font-weight: 700;
 }
 
 .vstupne-list {
@@ -136,8 +181,14 @@
 .vstupne-item {
     display: flex;
     justify-content: space-between;
+
     padding: 12px;
-    border-bottom: 1px solid #eeeeee;
+
+    border-bottom: 1px solid #dddddd;
+}
+
+.vstupne-item:last-child {
+    border-bottom: none;
 }
 
 .udalost-actions {
@@ -145,14 +196,22 @@
 }
 
 .udalost-actions button {
-    padding: 12px 20px;
+    padding: 11px 18px;
+
     color: white;
-    background-color: black;
+    background-color: #2563eb;
+
     border: none;
     border-radius: 7px;
-    cursor: pointer;
+
     font-size: 16px;
     font-weight: 600;
+
+    cursor: pointer;
+}
+
+.udalost-actions button:hover:not(:disabled) {
+    background-color: #1d4ed8;
 }
 
 .galeria-grid {
@@ -164,12 +223,23 @@
 .galeria-foto {
     width: 100%;
     height: 200px;
+
     object-fit: cover;
+
     border-radius: 8px;
 }
 
 .udalost-komentare {
     margin-top: 30px;
+}
+
+.udalost-komentare > h2 {
+    margin-bottom: 20px;
+
+    font-size: 22px;
+    font-weight: 700;
+
+    color: black;
 }
 
 .priemerne-hodnotenie {
@@ -180,7 +250,8 @@
     margin-bottom: 20px;
     padding: 15px;
 
-    background-color: #f7f7f7;
+    background-color: #f5f5f5;
+
     border: 1px solid #dddddd;
     border-radius: 8px;
 }
@@ -188,15 +259,17 @@
 .priemer-hviezdy {
     font-size: 22px;
     letter-spacing: 2px;
+
+    color: black;
+}
+
+.bez-hodnotenia,
+.komentare-empty {
+    color: #666666;
 }
 
 .bez-hodnotenia {
     margin-bottom: 20px;
-    color: #666666;
-}
-
-.komentare-empty {
-    color: #666666;
 }
 
 .komentare-list {
@@ -224,12 +297,19 @@
     margin-bottom: 10px;
 }
 
+.komentar-header strong {
+    color: black;
+}
+
 .komentar-rating {
     font-size: 20px;
+
+    color: black;
 }
 
 .komentar p {
     margin: 0;
+
     line-height: 1.5;
 }
 
@@ -251,6 +331,11 @@
 
 .komentar-form h3 {
     margin: 0 0 10px;
+
+    font-size: 18px;
+    font-weight: 700;
+
+    color: black;
 }
 
 .komentar-form select,
@@ -259,7 +344,10 @@
 
     font: inherit;
 
-    border: 1px solid #cccccc;
+    color: black;
+    background-color: white;
+
+    border: 1px solid #dddddd;
     border-radius: 7px;
 }
 
@@ -267,47 +355,47 @@
     resize: vertical;
 }
 
-.komentar-form button {
-    width: fit-content;
-
-    margin-top: 10px;
-    padding: 10px 20px;
-
-    border: none;
-    border-radius: 7px;
-
-    cursor: pointer;
-}
-
-.komentar-form button:disabled {
-    opacity: 0.6;
-    cursor: default;
-}
-
 .komentar-error {
     margin: 0;
 
     font-size: 14px;
-    color: #b00020;
+
+    color: #666666;
 }
 
 .komentar-submit {
-    padding: 12px 20px;
+    width: fit-content;
+
+    margin-top: 10px;
+    padding: 11px 18px;
+
     color: white;
-    background-color: black;
+    background-color: #2563eb;
+
     border: none;
     border-radius: 7px;
-    cursor: pointer;
+
     font-size: 16px;
     font-weight: 600;
+
+    cursor: pointer;
+}
+
+.komentar-submit:hover:not(:disabled) {
+    background-color: #1d4ed8;
 }
 
 .komentar-submit:disabled {
-    cursor: not-allowed;
+    opacity: 0.5;
+    cursor: default;
 }
 
 @media (max-width: 700px) {
     .galeria-grid {
         grid-template-columns: 1fr;
+    }
+
+    .udalost-oznacenie {
+        font-size: 30px;
     }
 }
