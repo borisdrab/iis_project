@@ -4,6 +4,8 @@
 
     margin: 0 auto;
     padding: 45px 25px 70px;
+
+    color: black;
 }
 
 .udalost-form-header {
@@ -12,16 +14,21 @@
 
 .udalost-form-header h1 {
     margin: 12px 0 8px;
+
     font-size: 36px;
+    font-weight: 700;
+
+    color: black;
 }
 
 .udalost-form-header p {
     margin: 0;
+
     color: #666666;
 }
 
 .udalost-form-back {
-    color: #555555;
+    color: black;
     text-decoration: none;
 }
 
@@ -46,7 +53,11 @@
 
 .udalost-form-section h2 {
     margin: 0 0 20px;
-    font-size: 21px;
+
+    font-size: 22px;
+    font-weight: 700;
+
+    color: black;
 }
 
 .udalost-form-section > p {
@@ -75,6 +86,7 @@
 
 .form-field label {
     font-weight: 600;
+    color: black;
 }
 
 .form-field input,
@@ -86,10 +98,10 @@
 
     font: inherit;
 
-    color: #222222;
+    color: black;
     background-color: white;
 
-    border: 1px solid #cccccc;
+    border: 1px solid #dddddd;
     border-radius: 7px;
 }
 
@@ -101,19 +113,20 @@
 .form-field select:focus,
 .form-field textarea:focus {
     outline: none;
-    border-color: #555555;
+    border-color: black;
 }
 
 .form-help {
-    font-size: 13px;
-    color: #777777;
+    font-size: 14px;
+    color: #666666;
 }
 
 .form-error {
     margin: 0;
 
-    color: #b00020;
     font-size: 14px;
+
+    color: #666666;
 }
 
 .vstupne-header {
@@ -125,22 +138,29 @@
 
 .vstupne-header h2 {
     margin-bottom: 5px;
+
+    font-size: 22px;
+    font-weight: 700;
+
+    color: black;
 }
 
 .vstupne-header p {
     margin: 0;
+
     color: #666666;
 }
 
 .vstupne-empty {
     margin: 20px 0 0;
-
     padding: 20px;
 
-    color: #777777;
     text-align: center;
 
-    border: 1px dashed #cccccc;
+    color: #666666;
+    background-color: white;
+
+    border: 1px dashed #dddddd;
     border-radius: 8px;
 }
 
@@ -160,9 +180,9 @@
 
     padding: 18px;
 
-    background-color: #f8f8f8;
+    background-color: #f5f5f5;
 
-    border: 1px solid #e2e2e2;
+    border: 1px solid #dddddd;
     border-radius: 9px;
 }
 
@@ -173,7 +193,13 @@
 .secondary-button,
 .remove-button,
 .submit-button {
+    padding: 11px 18px;
+
     font: inherit;
+    font-weight: 600;
+
+    color: white;
+    background-color: #2563eb;
 
     border: none;
     border-radius: 7px;
@@ -181,26 +207,10 @@
     cursor: pointer;
 }
 
-.secondary-button {
-    padding: 10px 15px;
-
-    color: #222222;
-    background-color: #eeeeee;
-}
-
-.secondary-button:hover {
-    background-color: #dddddd;
-}
-
-.remove-button {
-    padding: 11px 15px;
-
-    color: #9b1c1c;
-    background-color: #f3dddd;
-}
-
-.remove-button:hover {
-    background-color: #ebcccc;
+.secondary-button:hover,
+.remove-button:hover,
+.submit-button:hover {
+    background-color: #1d4ed8;
 }
 
 .udalost-form-actions {
@@ -212,31 +222,21 @@
 .cancel-button {
     padding: 11px 20px;
 
-    color: #222222;
-    text-decoration: none;
-
-    background-color: #eeeeee;
+    color: black;
+    background-color: #eeeeee   ;
 
     border-radius: 7px;
+
+    font-weight: 600;
+    text-decoration: none;
 }
 
 .cancel-button:hover {
     background-color: #dddddd;
 }
 
-.submit-button {
-    padding: 11px 22px;
-
-    color: white;
-    background-color: #2563eb;
-}
-
-.submit-button:hover {
-    background-color: #1d4ed8;
-}
-
 .submit-button:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: default;
 }
 

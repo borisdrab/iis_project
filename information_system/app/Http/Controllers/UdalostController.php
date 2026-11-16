@@ -33,8 +33,8 @@ class UdalostController extends Controller
 
         if ($search !== '') {
             $query->where(function ($q) use ($search) {
-                $q->where('oznacenie', 'LIKE', '%' . $search . '%')
-                ->orWhere('popis', 'LIKE', '%' . $search . '%');
+                $q->where('oznacenie', 'ILIKE', '%' . $search . '%')
+                ->orWhere('popis', 'ILIKE', '%' . $search . '%');
             });
         }
 

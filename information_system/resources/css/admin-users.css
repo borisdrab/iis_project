@@ -1,0 +1,144 @@
+.admin-users-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.admin-users-container h1 {
+    margin: 0 0 10px;
+
+    font-size: 36px;
+    font-weight: 700;
+
+    color: black;
+}
+
+.admin-users-description {
+    margin: 0 0 30px;
+
+    font-size: 16px;
+    color: #666666;
+}
+
+.admin-users-table-wrapper {
+    overflow-x: auto;
+
+    background-color: white;
+
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+}
+
+.admin-users-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-users-table th,
+.admin-users-table td {
+    padding: 16px;
+
+    text-align: left;
+
+    border-bottom: 1px solid #dddddd;
+}
+
+.admin-users-table th {
+    font-weight: 700;
+
+    color: black;
+    background-color: #f5f5f5;
+}
+
+.admin-users-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-users-table select {
+    min-width: 150px;
+    padding: 9px 10px;
+
+    font: inherit;
+
+    color: black;
+    background-color: white;
+
+    border: 1px solid #dddddd;
+    border-radius: 6px;
+}
+
+.admin-users-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.admin-users-actions button {
+    padding: 9px 14px;
+
+    border: none;
+    border-radius: 6px;
+
+    font: inherit;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.admin-users-actions button:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.admin-save-button {
+    color: white;
+    background-color: #2563eb;
+}
+
+.admin-save-button:hover:not(:disabled) {
+    background-color: #1d4ed8;
+}
+
+.admin-disable-button {
+    color: white;
+    background-color: #b91c1c;
+}
+
+.admin-disable-button:hover:not(:disabled) {
+    background-color: #991b1b;
+}
+
+.admin-enable-button {
+    color: white;
+    background-color: #15803d;
+}
+
+.admin-enable-button:hover:not(:disabled) {
+    background-color: #166534;
+}
+
+.user-active {
+    color: #15803d;
+    font-weight: 600;
+}
+
+.user-inactive {
+    color: #b91c1c;
+    font-weight: 600;
+}
+
+.admin-users-success,
+.admin-users-error {
+    margin-bottom: 20px;
+    padding: 12px 15px;
+
+    color: black;
+    background-color: #f5f5f5;
+
+    border: 1px solid #dddddd;
+    border-radius: 7px;
+}
+
+.admin-users-you {
+    color: #666666;
+    font-size: 14px;
+}

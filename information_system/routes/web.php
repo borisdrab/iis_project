@@ -32,7 +32,7 @@ Route::middleware(['auth'])->group(function () {
         ->name('udalosti.foto.store');
 
     Route::middleware(['role:Administrator'])->prefix('admin')->group(function () {
-        Route::inertia('listOfUsers', 'listOfUsers')->name('listOfUsers');
+        Route::inertia('listOfUsers', 'admin/user-list')->name('listOfUsers');
         Route::get('/users', [AdminUserController::class, 'index']);
         Route::post('/users', [AdminUserController::class, 'store']);
         Route::put('/users/{id}', [AdminUserController::class, 'update']);
