@@ -441,3 +441,16 @@
         font-size: 30px;
     }
 }
+
+.kapacita-error {
+    color: #dc2625;
+    margin-top: 8px;
+    font-size: 14px;
+}
+
+.registracia-item {
+    padding: 16px;
+    margin-top: 12px;
+    border: 1px solid #e5e7e9;
+    border-radius: 8px;
+}
