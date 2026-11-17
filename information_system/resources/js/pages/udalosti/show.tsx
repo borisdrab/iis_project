@@ -78,6 +78,11 @@ type Props = {
 };
 
 export default function Show({ udalost, hodnotenie, pocetHodnoteni, registracia, registracie }: Props) {
+    const zaciatokUdalosti = new Date(`${udalost.datum_od}T${udalost.cas_od}`);
+    const udalostZacala = new Date() >= zaciatokUdalosti;
+    const koniecUdalosti = new Date(`${udalost.datum_do}T${udalost.cas_do}`);
+    const udalostSkoncila = new Date() >= koniecUdalosti;
+
     const { auth } = usePage<{
         auth: {
             user: {
@@ -107,6 +112,7 @@ export default function Show({ udalost, hodnotenie, pocetHodnoteni, registracia,
         errors: registraciaErrors,
     } = useForm({
         vstupne_id: '',
+        udalost: '',
     })
 
     const {
@@ -255,7 +261,7 @@ export default function Show({ udalost, hodnotenie, pocetHodnoteni, registracia,
                     </section>
                 )}
 
-                {auth.user && !registracia &&(
+                {auth.user && !registracia && !udalostZacala &&(
                     <div className="udalost-actions">
                         <form onSubmit={submitRegistracia}>
                             {udalost.vstupne.length > 0 && (
@@ -291,8 +297,19 @@ export default function Show({ udalost, hodnotenie, pocetHodnoteni, registracia,
                                 ? 'Prihlasujem...'
                                 : 'Prihlásiť sa na udalosť'}
                         </button>
+                        {registraciaErrors.udalost && (
+                            <p className="kapacita-error">
+                                {registraciaErrors.udalost}
+                            </p>
+                        )}
                         </form>
                     </div>
+                )}
+
+                {auth.user && !registracia && udalostZacala && (
+                    <p className="kapacita-error">
+                        Registracia na danú udalosť už nie je možná.
+                    </p>
                 )}
 
                 {auth.user && registracia && (
@@ -323,7 +340,7 @@ export default function Show({ udalost, hodnotenie, pocetHodnoteni, registracia,
                                 <p>Počet registrácií: {registracie.length}</p>
 
                                 {registracie.map((registracia) => (
-                                    <div key={registracia.id}>
+                                    <div key={registracia.id} className="registracia-item">
                                         <p>Používateľ: {registracia.meno}</p>
 
                                         <p>
@@ -420,16 +437,18 @@ export default function Show({ udalost, hodnotenie, pocetHodnoteni, registracia,
                                 ({pocetHodnoteni} hodnotení)
                             </span>
                         </div>
-                    ) : (
+                    ) : udalostSkoncila ?(
                         <p className="bez-hodnotenia">
                             Udalosť zatiaľ nemá žiadne hodnotenie.
                         </p>
-                    )}
+                    ) : null}
 
                     {udalost.komentare.length === 0 ? (
-                        <p className="komentare-empty">
-                            Neboli pridané žiadne komentáre.
-                        </p>
+                        udalostSkoncila && (
+                            <p className="komentare-empty">
+                                Neboli pridané žiadne komentáre.
+                            </p>
+                        )
                     ) : (
                         <div className="komentare-list">
                             {udalost.komentare.map((komentar) => (
@@ -464,7 +483,7 @@ export default function Show({ udalost, hodnotenie, pocetHodnoteni, registracia,
                         </div>
                     )}
 
-                    {auth.user && (
+                    {auth.user && udalostSkoncila &&(
                         <form
                             className="komentar-form"
                             onSubmit={submitKomentar}
@@ -546,6 +565,12 @@ export default function Show({ udalost, hodnotenie, pocetHodnoteni, registracia,
                                     : 'Pridať'}
                             </button>
                         </form>
+                    )}
+
+                    {auth.user && !udalostSkoncila && (
+                        <p className = "komentare-empty">
+                            Hodnotenia a komentáre bude možné pridávať až po ukončení danej udalosti.
+                        </p>
                     )}
                 </section>
             </main>
