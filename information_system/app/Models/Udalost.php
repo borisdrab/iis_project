@@ -9,6 +9,8 @@ class Udalost extends Model
     protected $table = 'udalost';
     public $timestamps = false;
 
+    
+
     protected $fillable = [
         'oznacenie',
         'datum_od',

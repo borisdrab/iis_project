@@ -76,10 +76,29 @@ class UdalostController extends Controller
             ->whereNotNull('hodnotenie')
             ->count();
 
+        $registracia = Auth::check()
+            ? DB::table('registracia')
+                ->where('udalost_id', $udalost->id)
+                ->where('uzivatel_id', Auth::id())
+                ->first()
+            : null;
+
+        $registracie = Auth::id() === $udalost->zakladatel_id
+            ? DB::table('registracia')
+                ->where('udalost_id', $udalost->id)
+                ->leftJoin('zaplatil', 'registracia.id', '=', 'zaplatil.registracia_id')
+                ->select('registracia.*', 'zaplatil.zaplatene', 'osoba.meno')
+                ->join('uzivatel', 'registracia.uzivatel_id', '=', 'uzivatel.id')
+                ->join('osoba', 'uzivatel.id', '=', 'osoba.id')
+                ->get()
+            : null;
+
         return Inertia::render('udalosti/show', [
             'udalost' => $udalost,
             'hodnotenie' => $hodnotenie,
             'pocetHodnoteni' => $pocetHodnoteni,
+            'registracia' => $registracia,
+            'registracie' => $registracie,
         ]);
     }
 

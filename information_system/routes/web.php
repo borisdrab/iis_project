@@ -2,13 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\loginUser;
+use App\Http\Controllers\MiestoController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\UdalostController;
-use App\Http\Controllers\MiestoController;
 use App\Http\Controllers\KalendarController;
 use App\Http\Controllers\KomentarController;
 use App\Http\Controllers\UdalostFotoController;
+use App\Http\Controllers\ModeratorController;
+use App\Http\Controllers\RegistraciaController;
+use App\Http\Controllers\KategorieController;
 
 Route::get('/', [UdalostController::class, 'index'])
     ->name('home');
@@ -30,6 +33,14 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/udalosti/{id}/foto', [UdalostFotoController::class, 'store'])
         ->name('udalosti.foto.store');
+    Route::post('/udalosti/{udalost}/registracia', [RegistraciaController::class, 'registrujNaUdalost']);
+
+    Route::delete('/registracie/{registracia}', [RegistraciaController::class, 'zrusRegistraciu']);
+
+    Route::post('/miesta/navrhnut', [MiestoController::class, 'navrhniMiesto']);
+    Route::post('/kategorie/navrhnut', [KategorieController::class, 'navrhniKategoriu']);
+
+    Route::patch('/registracie/{registracia}/platba', [RegistraciaController::class, 'potvrdPlatbu']);
 
     Route::middleware(['role:Administrator'])->prefix('admin')->group(function () {
         Route::inertia('listOfUsers', 'admin/user-list')->name('listOfUsers');
@@ -37,6 +48,23 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/users', [AdminUserController::class, 'store']);
         Route::put('/users/{id}', [AdminUserController::class, 'update']);
         Route::patch('/users/{id}/toggle-active', [AdminUserController::class, 'toggleActive']);
+    });
+
+    Route::middleware(['role:Moderator'])->prefix('moderator')->group(function () {
+        Route::patch('/udalosti/{udalost}/schvalit', [ModeratorController::class, 'schvalUdalost']);
+        Route::get('/udalosti/cakajuce', [ModeratorController::class, 'cakajuceUdalosti']);
+        Route::patch('/udalosti/{udalost}/zamietnut', [ModeratorController::class, 'zamietnutUdalost']);
+
+        Route::get('/miesta/cakajuce', [ModeratorController::class, 'cakajuceMiesta']);
+        Route::patch('/miesta/{miesto}/schvalit', [ModeratorController::class, 'schvalMiesto']);
+        Route::patch('/miesta/{miesto}/zamietnut', [ModeratorController::class, 'zamietnutMiesto']);
+
+        Route::get('/kategorie/cakajuce', [ModeratorController::class, 'cakajuceKategorie']);
+        Route::patch('/kategorie/{kategoria}/schvalit', [ModeratorController::class, 'schvalKategoriu']);
+        Route::patch('/kategorie/{kategoria}/zamietnut', [ModeratorController::class, 'zamietnutKategoriu']);
+
+        Route::delete('/komentare/{komentar}', [ModeratorController::class, 'odstranKomentar']);
+
     });
 
     Route::post('/logout', [loginUser::class, 'logout']);

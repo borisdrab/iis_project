@@ -1,6 +1,6 @@
-import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import '../../../css/udalosti-detail.css';
-import type { SyntheticEvent } from 'react';
+import type { SyntheticEvent} from 'react';
 
 type Miesto = {
     id: number;
@@ -60,13 +60,29 @@ type Udalost = {
     zakladatel_id: number;
 };
 
+type Registracia = {
+    id: number;
+    uzivatel_id: number;
+    udalost_id: number;
+    vstupne_id: number | null;
+    zaplatene?: boolean | null;
+    meno?: string;
+};
+
 type Props = {
     udalost: Udalost;
     hodnotenie: number | null;
     pocetHodnoteni: number;
+    registracia: Registracia | null;
+    registracie: Registracia[] | null;
 };
 
-export default function Show({ udalost, hodnotenie, pocetHodnoteni }: Props) {
+export default function Show({ udalost, hodnotenie, pocetHodnoteni, registracia, registracie }: Props) {
+    const zaciatokUdalosti = new Date(`${udalost.datum_od}T${udalost.cas_od}`);
+    const udalostZacala = new Date() >= zaciatokUdalosti;
+    const koniecUdalosti = new Date(`${udalost.datum_do}T${udalost.cas_do}`);
+    const udalostSkoncila = new Date() >= koniecUdalosti;
+
     const { auth } = usePage<{
         auth: {
             user: {
@@ -87,6 +103,17 @@ export default function Show({ udalost, hodnotenie, pocetHodnoteni }: Props) {
         text: '',
         hodnotenie: '',
     });
+
+    const {
+        data: registraciaData,
+        setData: setRegistraciaData,
+        post: postRegistracia,
+        processing: registraciaProcessing,
+        errors: registraciaErrors,
+    } = useForm({
+        vstupne_id: '',
+        udalost: '',
+    })
 
     const {
         data: fotoData,
@@ -113,6 +140,23 @@ export default function Show({ udalost, hodnotenie, pocetHodnoteni }: Props) {
                 reset();
             },
         });
+    }
+
+    function submitRegistracia(event: SyntheticEvent<HTMLFormElement>) {
+        event.preventDefault();
+
+        postRegistracia(`/udalosti/${udalost.id}/registracia`);
+    }
+
+    function zrusRegistraciu() {
+        if (registracia != null) {
+            console.log('ID registracie:', registracia.id)
+            router.delete(`/registracie/${registracia.id}`);
+        }
+    }
+
+    function potvrdPlatbu(registraciaId: number) {
+        router.patch(`/registracie/${registraciaId}/platba`);
     }
 
     function submitFoto(event: SyntheticEvent<HTMLFormElement>) {
@@ -217,12 +261,109 @@ export default function Show({ udalost, hodnotenie, pocetHodnoteni }: Props) {
                     </section>
                 )}
 
-                {auth.user && (
+                {auth.user && !registracia && !udalostZacala &&(
                     <div className="udalost-actions">
-                        <button type="button">
-                            Prihlásiť sa na udalosť
+                        <form onSubmit={submitRegistracia}>
+                            {udalost.vstupne.length > 0 && (
+                                <div>
+                                    <label htmlFor="vstupne_id">
+                                        Kategórie vstupného
+                                    </label>
+
+                                    <select
+                                        id="vstupne_id"
+                                        value={registraciaData.vstupne_id}
+                                        onChange={(event) => 
+                                            setRegistraciaData('vstupne_id', event.target.value)
+                                        }
+                                        required
+                                    >
+                                        <option value="">Vyberte vstupné</option>
+                                        {udalost.vstupne.map((vstup) => (
+                                            <option key={vstup.id} value={vstup.id}>
+                                                {vstup.typ} - {Number(vstup.cennik).toFixed(2)} €
+                                            </option>
+                                        ))}
+                                    </select>
+                                    {registraciaErrors.vstupne_id && (
+                                        <p className="komentar-error">
+                                            {registraciaErrors.vstupne_id}
+                                        </p>
+                                    )}
+                                </div>
+                            )}
+                        <button type="submit" disabled={registraciaProcessing}>
+                            {registraciaProcessing
+                                ? 'Prihlasujem...'
+                                : 'Prihlásiť sa na udalosť'}
+                        </button>
+                        {registraciaErrors.udalost && (
+                            <p className="kapacita-error">
+                                {registraciaErrors.udalost}
+                            </p>
+                        )}
+                        </form>
+                    </div>
+                )}
+
+                {auth.user && !registracia && udalostZacala && (
+                    <p className="kapacita-error">
+                        Registracia na danú udalosť už nie je možná.
+                    </p>
+                )}
+
+                {auth.user && registracia && (
+                    <div className="udalost-actions">
+                        {registracia.vstupne_id !== null && (
+                            <p>
+                                Vybrané vstupné: {
+                                    udalost.vstupne.find(
+                                        (vstup) => vstup.id === registracia.vstupne_id
+                                    )?.typ ?? 'Neznáma'
+                                }
+                            </p>
+                        )}
+                        <button type="button" onClick={zrusRegistraciu}>
+                            Zrušiť registráciu
                         </button>
                     </div>
+                )}
+
+                {registracie !== null && (
+                    <section className="udalost-registracie">
+                        <h2>Registrovaní používatelia</h2>
+
+                        {registracie.length === 0 ? (
+                          <p>Na túto udalosť sa zatiaľ nikto neregistroval.</p>
+                        ) : (
+                            <div>
+                                <p>Počet registrácií: {registracie.length}</p>
+
+                                {registracie.map((registracia) => (
+                                    <div key={registracia.id} className="registracia-item">
+                                        <p>Používateľ: {registracia.meno}</p>
+
+                                        <p>
+                                            Stav platby: {registracia.vstupne_id === null
+                                                ? 'Bezplatná registrácia'
+                                                : registracia.zaplatene
+                                                    ? 'Zaplatené'
+                                                    : 'Nezaplatené'}
+                                        </p>
+                                        {registracia.vstupne_id !== null && !registracia.zaplatene && (
+                                            <button
+                                                type="button"
+                                                className="udalost-platba-button"
+                                                onClick={() => potvrdPlatbu(registracia.id)}
+                                            >
+                                                Potvrdiť platbu
+                                            </button>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </section>
                 )}
 
                 {auth.user?.id === udalost.zakladatel_id && (
@@ -296,16 +437,18 @@ export default function Show({ udalost, hodnotenie, pocetHodnoteni }: Props) {
                                 ({pocetHodnoteni} hodnotení)
                             </span>
                         </div>
-                    ) : (
+                    ) : udalostSkoncila ?(
                         <p className="bez-hodnotenia">
                             Udalosť zatiaľ nemá žiadne hodnotenie.
                         </p>
-                    )}
+                    ) : null}
 
                     {udalost.komentare.length === 0 ? (
-                        <p className="komentare-empty">
-                            Neboli pridané žiadne komentáre.
-                        </p>
+                        udalostSkoncila && (
+                            <p className="komentare-empty">
+                                Neboli pridané žiadne komentáre.
+                            </p>
+                        )
                     ) : (
                         <div className="komentare-list">
                             {udalost.komentare.map((komentar) => (
@@ -340,7 +483,7 @@ export default function Show({ udalost, hodnotenie, pocetHodnoteni }: Props) {
                         </div>
                     )}
 
-                    {auth.user && (
+                    {auth.user && udalostSkoncila &&(
                         <form
                             className="komentar-form"
                             onSubmit={submitKomentar}
@@ -422,6 +565,12 @@ export default function Show({ udalost, hodnotenie, pocetHodnoteni }: Props) {
                                     : 'Pridať'}
                             </button>
                         </form>
+                    )}
+
+                    {auth.user && !udalostSkoncila && (
+                        <p className = "komentare-empty">
+                            Hodnotenia a komentáre bude možné pridávať až po ukončení danej udalosti.
+                        </p>
                     )}
                 </section>
             </main>
