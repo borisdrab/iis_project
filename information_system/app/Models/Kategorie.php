@@ -8,7 +8,6 @@ class Kategorie extends Model
 {
     protected $table = 'kategorie';
     public $timestamps = false;
-
     protected $fillable = [
         'typ',
         'rodic_id',

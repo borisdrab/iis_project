@@ -10,6 +10,12 @@ class Registracia extends Model
 
     public $timestamps = false;
 
+    protected $fillable = [
+        'uzivatel_id',
+        'udalost_id',
+        'vstupne_id',
+    ];
+
     public function udalost()
     {
         return $this->belongsTo(Udalost::class, 'udalost_id');

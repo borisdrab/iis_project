@@ -214,6 +214,28 @@
     background-color: #1d4ed8;
 }
 
+.udalost-platba-button {
+    padding: 11px 18px;
+
+    color: white;
+    background-color: #2563eb;
+
+    border: none;
+    border-radius: 7px;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    margin-top: 8px;
+    margin-bottom: 16px
+}
+
+.udalost-platba-button:hover {
+    background-color: #1d4ed8;
+}
+
 .galeria-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
