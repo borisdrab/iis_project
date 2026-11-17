@@ -329,6 +329,26 @@
     color: black;
 }
 
+.komentar-delete {
+    padding: 8px 12px;
+
+    color: white;
+    background-color: #b91c1c;
+
+    border: none;
+    border-radius: 6px;
+
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.komentar-delete:hover {
+    background-color: #991b1b;
+}
+
 .komentar p {
     margin: 0;
 

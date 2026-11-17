@@ -240,6 +240,49 @@
     cursor: default;
 }
 
+.navrh-container {
+    margin-top: 25px;
+    padding: 20px;
+
+    background-color: white;
+
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+}
+
+.navrh-container summary {
+    color: black;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.navrh-container summary:hover {
+    text-decoration: underline;
+}
+
+.navrh-form {
+    margin-top: 25px;
+}
+
+.navrh-form h2 {
+    margin: 0 0 8px;
+
+    font-size: 22px;
+    font-weight: 700;
+
+    color: black;
+}
+
+.navrh-actions {
+    display: flex;
+    justify-content: flex-end;
+
+    margin-top: 20px;
+}
+
 @media (max-width: 750px) {
     .form-grid {
         grid-template-columns: 1fr;

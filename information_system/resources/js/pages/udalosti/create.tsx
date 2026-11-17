@@ -50,12 +50,65 @@ export default function Create({
         vstupne: [] as Vstupne[],
     });
 
+    const {
+        data: miestoData,
+        setData: setMiestoData,
+        post: postMiesto,
+        processing: miestoProcessing,
+        errors: miestoErrors,
+        reset: resetMiesto,
+    } = useForm({
+        adresa: '',
+        typ: '',
+        popis: '',
+    });
+
+    const {
+        data: kategoriaData,
+        setData: setKategoriaData,
+        post: postKategoria,
+        processing: kategoriaProcessing,
+        errors: kategoriaErrors,
+        reset: resetKategoria,
+    } = useForm({
+        typ: '',
+        rodic_id: '',
+    });
+
     function submit(
         event: SyntheticEvent<HTMLFormElement>
     ) {
         event.preventDefault();
 
         post('/udalosti');
+    }
+
+    function submitMiesto(
+        event: SyntheticEvent<HTMLFormElement>
+    ) {
+        event.preventDefault();
+
+        postMiesto('/miesta/navrhnut', {
+            preserveScroll: true,
+
+            onSuccess: () => {
+                resetMiesto();
+            },
+        });
+    }
+
+    function submitKategoria(
+        event: SyntheticEvent<HTMLFormElement>
+    ) {
+        event.preventDefault();
+
+        postKategoria('/kategorie/navrhnut', {
+            preserveScroll: true,
+
+            onSuccess: () => {
+                resetKategoria();
+            },
+        });
     }
 
     function pridajVstupne() {
@@ -610,6 +663,187 @@ export default function Create({
                         </button>
                     </div>
                 </form>
+
+                <details className="navrh-container">
+                    <summary>
+                        Nenašli ste miesto? Navrhnúť nové miesto
+                    </summary>
+
+                    <form
+                        className="navrh-form"
+                        onSubmit={submitMiesto}
+                    >
+                        <h2>Navrhnúť nové miesto</h2>
+                        <div className="form-field">
+                            <label htmlFor="navrh-adresa">
+                                Adresa
+                            </label>
+
+                            <input
+                                id="navrh-adresa"
+                                type="text"
+                                value={miestoData.adresa}
+                                onChange={(event) =>
+                                    setMiestoData(
+                                        'adresa',
+                                        event.target.value
+                                    )
+                                }
+                                placeholder="Napr. Božetěchova 2, Brno"
+                                required
+                            />
+
+                            {miestoErrors.adresa && (
+                                <p className="form-error">
+                                    {miestoErrors.adresa}
+                                </p>
+                            )}
+                        </div>
+
+                        <div className="form-field">
+                            <label htmlFor="navrh-typ">
+                                Typ miesta
+                            </label>
+
+                            <input
+                                id="navrh-typ"
+                                type="text"
+                                value={miestoData.typ}
+                                onChange={(event) =>
+                                    setMiestoData(
+                                        'typ',
+                                        event.target.value
+                                    )
+                                }
+                                placeholder="Napr. univerzita, hala, klub"
+                                required
+                            />
+
+                            {miestoErrors.typ && (
+                                <p className="form-error">
+                                    {miestoErrors.typ}
+                                </p>
+                            )}
+                        </div>
+
+                        <div className="form-field">
+                            <label htmlFor="navrh-popis">
+                                Popis
+                            </label>
+
+                            <textarea
+                                id="navrh-popis"
+                                rows={4}
+                                value={miestoData.popis}
+                                onChange={(event) =>
+                                    setMiestoData(
+                                        'popis',
+                                        event.target.value
+                                    )
+                                }
+                                placeholder="Voliteľný popis miesta..."
+                            />
+
+                            {miestoErrors.popis && (
+                                <p className="form-error">
+                                    {miestoErrors.popis}
+                                </p>
+                            )}
+                        </div>
+
+                        <div className="navrh-actions">
+                            <button
+                                type="submit"
+                                className="submit-button"
+                                disabled={miestoProcessing}
+                            >
+                                {miestoProcessing
+                                    ? 'Odosielam...'
+                                    : 'Navrhnúť miesto'}
+                            </button>
+                        </div>
+                    </form>
+                </details>
+
+                <details className="navrh-container">
+                    <summary>
+                        Nenašli ste kategóriu? Navrhnúť novú kategóriu
+                    </summary>
+
+                    <form
+                        className="navrh-form"
+                        onSubmit={submitKategoria}
+                    >
+                        <h2>Navrhnúť novú kategóriu</h2>
+                        
+                        <div className="form-field">
+                            <label htmlFor="navrh-kategoria-typ">
+                                Názov kategórie
+                            </label>
+
+                            <input
+                                id="navrh-kategoria-typ"
+                                type="text"
+                                value={kategoriaData.typ}
+                                onChange={(event) =>
+                                    setKategoriaData(
+                                        'typ',
+                                        event.target.value
+                                    )
+                                }
+                                placeholder="Napr. Workshop"
+                                required
+                            />
+
+                            {kategoriaErrors.typ && (
+                                <p className="form-error">
+                                    {kategoriaErrors.typ}
+                                </p>
+                            )}
+                        </div>
+
+                        <div className="form-field">
+                            <label htmlFor="navrh-rodic-id">
+                                Rodičovská kategória
+                            </label>
+
+                            <select
+                                id="navrh-rodic-id"
+                                value={kategoriaData.rodic_id}
+                                onChange={(event) =>
+                                    setKategoriaData(
+                                        'rodic_id',
+                                        event.target.value
+                                    )
+                                }
+                            >
+                                <option value="">
+                                    Bez rodičovskej kategórie
+                                </option>
+
+                                {renderCategoryOptions(null)}
+                            </select>
+
+                            {kategoriaErrors.rodic_id && (
+                                <p className="form-error">
+                                    {kategoriaErrors.rodic_id}
+                                </p>
+                            )}
+                        </div>
+
+                        <div className="navrh-actions">
+                            <button
+                                type="submit"
+                                className="submit-button"
+                                disabled={kategoriaProcessing}
+                            >
+                                {kategoriaProcessing
+                                    ? 'Odosielam...'
+                                    : 'Navrhnúť kategóriu'}
+                            </button>
+                        </div>
+                    </form>
+                </details>
             </main>
         </>
     );

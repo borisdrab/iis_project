@@ -48,6 +48,12 @@ export default function AppLayout({
                             </Link>
                         )}
 
+                        {auth.isModerator && (
+                            <Link href="/moderator/moderation">
+                                Moderovanie
+                            </Link>
+                        )}
+
                         {auth.isAdmin && (
                             <Link href="/admin/listOfUsers">
                                 Správa používateľov

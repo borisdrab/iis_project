@@ -51,4 +51,8 @@ class Udalost extends Model
     public function komentare() {
         return $this->hasMany(Komentar::class, 'udalost_id');
     }
+
+    public function zakladatel() {
+        return $this->belongsTo(Osoba::class, 'zakladatel_id');
+    }
 }

@@ -84,6 +84,7 @@ export default function Show({ udalost, hodnotenie, pocetHodnoteni, registracia,
                 id: number;
                 meno: string;
             } | null;
+            isModerator: boolean;
         };
     }>().props;
 
@@ -151,6 +152,10 @@ export default function Show({ udalost, hodnotenie, pocetHodnoteni, registracia,
 
     function potvrdPlatbu(registraciaId: number) {
         router.patch(`/registracie/${registraciaId}/platba`);
+    }
+
+    function odstranKomentar(komentarId: number) {
+        router.delete(`/moderator/komentare/${komentarId}`, { preserveScroll: true });
     }
 
     function submitFoto(event: SyntheticEvent<HTMLFormElement>) {
@@ -438,21 +443,35 @@ export default function Show({ udalost, hodnotenie, pocetHodnoteni, registracia,
                                     key={komentar.id}
                                 >
                                     <div className="komentar-header">
-                                        <strong>
-                                            {komentar.uzivatel?.osoba?.meno ??
-                                                'Používateľ'}
-                                        </strong>
+                                        <div className="komentar-author">
+                                            <strong>
+                                                {komentar.uzivatel?.osoba?.meno ??
+                                                    'Používateľ'}
+                                            </strong>
 
-                                        {komentar.hodnotenie !== null && (
-                                            <span className="komentar-rating">
-                                                {'★'.repeat(
-                                                    komentar.hodnotenie
-                                                )}
+                                            {komentar.hodnotenie !== null && (
+                                                <span className="komentar-rating">
+                                                    {'★'.repeat(
+                                                        komentar.hodnotenie
+                                                    )}
 
-                                                {'☆'.repeat(
-                                                    5 - komentar.hodnotenie
-                                                )}
-                                            </span>
+                                                    {'☆'.repeat(
+                                                        5 - komentar.hodnotenie
+                                                    )}
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        {auth.isModerator && (
+                                            <button
+                                                type="button"
+                                                className="komentar-delete"
+                                                onClick={() =>
+                                                    odstranKomentar(komentar.id)
+                                                }
+                                            >
+                                                Odstrániť
+                                            </button>
                                         )}
                                     </div>
 
