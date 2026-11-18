@@ -27,4 +27,8 @@ class Miesto extends Model
     {
         return $this->hasMany(Udalost::class, 'miesto_id');
     }
+
+    public function navrhovatel() {
+        return $this->belongsTo(Osoba::class, 'navrhol_id');
+    }
 }

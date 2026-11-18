@@ -15,4 +15,12 @@ class Kategorie extends Model
         'stav',
         'schvalil_id',
     ];
+
+    public function navrhovatel() {
+        return $this->belongsTo(Osoba::class, 'navrhol_id');
+    }
+
+    public function rodic() {
+        return $this->belongsTo(Kategorie::class, 'rodic_id');
+    }
 }

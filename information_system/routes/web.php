@@ -51,6 +51,8 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::middleware(['role:Moderator'])->prefix('moderator')->group(function () {
+        Route::get('/moderation', [ModeratorController::class, 'index'])->name('moderator.moderation');
+
         Route::patch('/udalosti/{udalost}/schvalit', [ModeratorController::class, 'schvalUdalost']);
         Route::get('/udalosti/cakajuce', [ModeratorController::class, 'cakajuceUdalosti']);
         Route::patch('/udalosti/{udalost}/zamietnut', [ModeratorController::class, 'zamietnutUdalost']);

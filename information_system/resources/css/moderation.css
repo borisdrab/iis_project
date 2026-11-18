@@ -1,0 +1,186 @@
+.moderation-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 20px 70px;
+}
+
+.moderation-header {
+    margin-bottom: 30px;
+}
+
+.moderation-header h1 {
+    margin: 0 0 10px;
+    font-size: 36px;
+    font-weight: 700;
+    color: black;
+}
+
+.moderation-section {
+    margin-bottom: 40px;
+}
+
+.moderation-section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.moderation-section-header h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+    color: black;
+}
+
+.moderation-section-header span {
+    min-width: 28px;
+    padding: 4px 9px;
+
+    text-align: center;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    color: #666666;
+    background-color: #f5f5f5;
+
+    border: 1px solid #dddddd;
+    border-radius: 20px;
+}
+
+.moderation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.moderation-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+
+    padding: 22px;
+
+    background-color: white;
+
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+}
+
+.moderation-card-content {
+    flex: 1;
+}
+
+.moderation-card-content h3 {
+    margin: 0 0 8px;
+
+    font-size: 19px;
+    font-weight: 700;
+
+    color: black;
+}
+
+.moderation-card-content p {
+    margin: 8px 0;
+
+    font-size: 15px;
+    line-height: 1.5;
+
+    color: black;
+}
+
+.moderation-card-content .moderation-secondary {
+    color: #666666;
+}
+
+.moderation-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+
+    margin-top: 14px;
+
+    font-size: 14px;
+    color: #666666;
+}
+
+.moderation-details strong {
+    font-weight: 600;
+    color: black;
+}
+
+.moderation-actions {
+    display: flex;
+    gap: 10px;
+
+    flex-shrink: 0;
+}
+
+.moderation-actions button {
+    padding: 10px 16px;
+
+    border: none;
+    border-radius: 7px;
+
+    font: inherit;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.moderation-approve {
+    color: white;
+    background-color: #15803d;
+}
+
+.moderation-approve:hover {
+    background-color: #166534;
+}
+
+.moderation-reject {
+    color: white;
+    background-color: #b91c1c;
+}
+
+.moderation-reject:hover {
+    background-color: #991b1b;
+}
+
+.moderation-empty {
+    margin: 0;
+    padding: 20px;
+
+    font-size: 15px;
+
+    color: #666666;
+    background-color: white;
+
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+}
+
+@media (max-width: 700px) {
+    .moderation-container {
+        padding: 30px 15px 50px;
+    }
+
+    .moderation-header h1 {
+        font-size: 30px;
+    }
+
+    .moderation-card {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 20px;
+    }
+
+    .moderation-actions {
+        width: 100%;
+    }
+
+    .moderation-actions button {
+        flex: 1;
+    }
+}

@@ -8,6 +8,7 @@ use App\Models\Komentar;
 use App\Models\Kategorie;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Inertia\Inertia;
 
 //use Iluminate\Http\Request;
 
@@ -122,5 +123,25 @@ class ModeratorController extends Controller
 
         $komentar->delete();
         return back()->with('oznamenie', 'Komentár bol odstránený.');
+    }
+
+    public function index() {
+        $udalosti = Udalost::with(['miesto', 'kategoria', 'zakladatel' ])
+            ->where('stav', 'cakajuce')
+            ->get();
+
+        $miesta = Miesto::with('navrhovatel')
+            ->where('stav', 'cakajuce')
+            ->get();
+
+        $kategorie = Kategorie::with(['navrhovatel', 'rodic' ])
+            ->where('stav', 'cakajuce')
+            ->get();
+
+        return Inertia::render('moderator/moderation', [
+            'udalosti' => $udalosti,
+            'miesta' => $miesta,
+            'kategorie' => $kategorie,
+        ]);
     }
 }
