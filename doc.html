@@ -55,51 +55,51 @@
 
 Zde vložte grafické schéma relační databáze (tabulek v databázi).
 
-<h2>Instalace</h2>
+<h2>Inštalácia</h2>
 
-<h3>Softwarové požadavky</h3>
+<h3>Softvérové požiadavky</h3>
 <ul>
-    <li><strong>PHP:</strong> verze 8.4 nebo vyšší (s povolenými rozšířeními <code>pdo</code>, <code>pdo_pgsql</code>, <code>zip</code>, <code>mbstring</code>, <code>openssl</code>, <code>tokenizer</code>, <code>xml</code>, <code>ctype</code>)</li>
-    <li><strong>Správce PHP balíčků:</strong> Composer 2.x</li>
-    <li><strong>Node.js a npm:</strong> Node.js verze 22+ a npm (pro sestavení frontendových assetů přes Vite)</li>
-    <li><strong>Databázový server:</strong> PostgreSQL 18 (kompatibilní s PostgreSQL 16+)</li>
-    <li><strong>Použité frameworky a knihovny:</strong> Laravel 13, Inertia.js, React 19, Tailwind CSS, Vite (alternativně lze aplikaci spustit přímo v kontejneru pomocí přiloženého <code>Dockerfile</code>)</li>
+    <li><strong>PHP:</strong> verzia 8.4 alebo vyššia (s povolenými rozšíreniami <code>pdo</code>, <code>pdo_pgsql</code>, <code>zip</code>, <code>mbstring</code>, <code>openssl</code>, <code>tokenizer</code>, <code>xml</code>, <code>ctype</code>)</li>
+    <li><strong>Správca PHP balíčkov:</strong> Composer 2.x</li>
+    <li><strong>Node.js a npm:</strong> Node.js verzie 22+ a npm (na zostavenie frontendových assetov cez Vite)</li>
+    <li><strong>Databázový server:</strong> PostgreSQL 18 (kompatibilný s PostgreSQL 16+)</li>
+    <li><strong>Použité frameworky a knižnice:</strong> Laravel 13, Inertia.js, React 19, Tailwind CSS, Vite (alternatívne je možné aplikáciu spustiť priamo v kontajneri pomocou priloženého <code>Dockerfile</code>)</li>
 </ul>
 
-<h3>Lokální instalace a konfigurace</h3>
+<h3>Lokálna inštalácia a konfigurácia</h3>
 <ol>
-    <li>Rozbalte odevzdaný archiv. Zdrojové kódy webové aplikace se nacházejí ve složce <code>information_system/</code> a databázové skripty ve složce <code>database/</code>.</li>
-    <li>Přejděte do adresáře aplikace a nainstalujte závislosti:
+    <li>Rozbaľte odovzdaný archív. Zdrojové kódy webovej aplikácie sa nachádzajú v priečinku <code>information_system/</code> a databázové skripty v priečinku <code>database/</code>.</li>
+    <li>Prejdite do adresára aplikácie a nainštalujte závislosti:
         <pre>cd information_system
 composer install --optimize-autoloader
 npm install &amp;&amp; npm run build</pre>
     </li>
-    <li>Zkopírujte konfigurační soubor <code>.env.example</code> na <code>.env</code> a vygenerujte aplikační klíč:
+    <li>Skopírujte konfiguračný súbor <code>.env.example</code> na <code>.env</code> a vygenerujte aplikačný kľúč:
         <pre>cp .env.example .env
 php artisan key:generate</pre>
     </li>
-    <li>V souboru <code>.env</code> nastavte připojení k PostgreSQL databázi a URL aplikace:
+    <li>V súbore <code>.env</code> nastavte pripojenie k PostgreSQL databáze a URL aplikácie:
         <pre>APP_ENV=production
 APP_URL=https://iis-project-ek26.onrender.com
 
 DB_CONNECTION=pgsql
-DB_HOST=&lt;adresa_databazoveho_serveru&gt;
+DB_HOST=&lt;adresa_databazoveho_servera&gt;
 DB_PORT=5432
-DB_DATABASE=&lt;nazev_databaze&gt;
-DB_USERNAME=&lt;uzivatel&gt;
+DB_DATABASE=&lt;nazov_databazy&gt;
+DB_USERNAME=&lt;pouzivatel&gt;
 DB_PASSWORD=&lt;heslo&gt;</pre>
     </li>
-    <li>Nastavte práva pro zápis do adresářů <code>storage/</code> a <code>bootstrap/cache/</code> (na Linuxu <code>chmod -R 775 storage bootstrap/cache</code>).</li>
+    <li>Nastavte práva na zápis do adresárov <code>storage/</code> a <code>bootstrap/cache/</code> (na Linuxe <code>chmod -R 775 storage bootstrap/cache</code>).</li>
 </ol>
 
-<h3>Inicializace databáze</h3>
-<p>Databázové schéma a ukázková data jsou uložena ve složce <code>database/</code>. Inicializaci provedete spuštěním skriptů v následujícím pořadí přes nástroj <code>psql</code> (nebo v grafickém klientovi jako DBeaver/DataGrip):</p>
-<pre>psql -h &lt;host&gt; -U &lt;uzivatel&gt; -d &lt;databaze&gt; -f database/schema.sql
-psql -h &lt;host&gt; -U &lt;uzivatel&gt; -d &lt;databaze&gt; -f database/data.sql</pre>
-<p>Skript <code>schema.sql</code> vytvoří všechny tabulky, primární a cizí klíče i integritní omezení. Skript <code>data.sql</code> naplní databázi testovacími uživateli všech rolí, místy, kategoriemi a událostmi a zosynchronizuje sekvence identifikátorů.</p>
+<h3>Inicializácia databázy</h3>
+<p>Databázová schéma a ukážkové dáta sú uložené v priečinku <code>database/</code>. Z koreňového adresára rozbaleného archívu vykonajte inicializáciu spustením skriptov v nasledujúcom poradí cez nástroj <code>psql</code> (alebo v grafickom klientovi ako DBeaver/DataGrip):</p>
+<pre>psql -h &lt;host&gt; -U &lt;pouzivatel&gt; -d &lt;databaza&gt; -f database/schema.sql
+psql -h &lt;host&gt; -U &lt;pouzivatel&gt; -d &lt;databaza&gt; -f database/data.sql</pre>
+<p>Skript <code>schema.sql</code> vytvorí všetky tabuľky, primárne a cudzie kľúče aj integritné obmedzenia. Skript <code>data.sql</code> naplní databázu testovacími používateľmi všetkých rolí, miestami, kategóriami a udalosťami a zosynchronizuje sekvencie identifikátorov.</p>
 
-<h3>Nasazení na produkční server</h3>
-<p>Produkční verze aplikace běží na cloudové platformě <strong>Render.com</strong> (region Frankfurt) jako Docker kontejner postavený ze souboru <code>information_system/Dockerfile</code> (obraz <code>php:8.4-cli</code> s Node.js 22), který je propojen se spravovanou instancí <strong>PostgreSQL 18</strong>. Při spuštění kontejneru se cachuje konfigurace i routy (<code>php artisan config:cache</code>, <code>php artisan route:cache</code>) a spouští se vestavěný HTTP server na přiděleném portu. Na školním serveru <code>eva.fit.vutbr.cz</code> (<code>~/WWW/IIS/index.html</code>) je umístěna přesměrovací stránka odkazující na živou aplikaci.</p>
+<h3>Nasadenie na produkčný server</h3>
+<p>Produkčná verzia aplikácie beží na cloudovej platforme <strong>Render.com</strong> (región Frankfurt) ako Docker kontajner postavený zo súboru <code>information_system/Dockerfile</code> (obraz <code>php:8.4-cli</code> s Node.js 22), ktorý je prepojený so spravovanou inštanciou <strong>PostgreSQL 18</strong>. Pri spustení kontajnera sa cachuje konfigurácia aj routy (<code>php artisan config:cache</code>, <code>php artisan route:cache</code>) a spúšťa sa vstavaný HTTP server na pridelenom porte. Na školskom serveri <code>eva.fit.vutbr.cz</code> (<code>~/WWW/IIS/index.html</code>) je umiestnená presmerovacia stránka odkazujúca na živú aplikáciu.</p>
 
 <h2>Známé problémy</h2>
 <p>Zde popište, které body zadání nejsou implementovány a z jakého důvodu. Např. &bdquo;Z časových důvodů nebyla implementována správa uživatelů.&rdquo; Pomůžete tím zrychlit hodnocení, když neimplementované funkce nebudeme muset dlouze hledat.</p>
