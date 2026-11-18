@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>Projekt IIS</title>
+    <style type="text/css">
+    	table { border-collapse: collapse; }
+    	td, th { border: 1px solid black; padding: 0.3em 0.5em; text-align: left; }
+    	dt { font-weight: bold; margin-top: 0.5em; }
+    </style>
+</head>
+<body>
+
+<!-- Zkontrolujte prosím nastavení kódování v hlavičce dokumentu 
+     podle použitého editoru -->
+
+<h1>Akce a události</h1> <!-- Nahradte názvem svého zadání -->
+
+<dl>
+	<dt>Autoři</dt>
+	<dd>První jméno <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+	    <a href="mailto:xvadova00@stud.fit.vutbr.cz">xvadova00@stud.fit.vutbr.cz</a> -
+		deploy, uživatelia a role, vytvorenie udalostí
+	</dd>
+	<dd>Druhé jméno <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+	    <a href="mailto:xautor02@stud.fit.vutbr.cz">xautor02@stud.fit.vutbr.cz</a> - 
+		popis činnosti v týmu
+	</dd>
+  <dd>Třetí jméno <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+	    <a href="mailto:xautor03@stud.fit.vutbr.cz">xautor03@stud.fit.vutbr.cz</a> - 
+		popis činnosti v týmu
+	</dd>
+	<dt>URL aplikace</dt>
+	<dd><a href="https://iis-project-ek26.onrender.com/">https://iis-project-ek26.onrender.com/</a></dd>
+</dl>
+
+<h2>Uživatelé systému pro testování</h2>
+<p>Uveďte prosím existující zástupce <strong>všech rolí uživatelů</strong>.</p>
+<table>
+<tr><th>Login</th><th>Heslo</th><th>Role</th></tr>
+<tr><td>admin@example.com</td><td>password</td><td>Administrátor</td></tr>
+<tr><td>moderator@example.com</td><td>password</td><td>Moderator</td></tr>
+<tr><td>andrej.vadovsky@example.com</td><td>password</td><td>Uživatel</td></tr>
+</table>
+
+<h3>Video</h3>
+
+<p>Přiložte odkaz na komentované video demostrující použití informačního systému. Zaměřte se na případy užití definované zadáním (např. registrace uživatele, správa uživatelů a činnosti jednotlivých rolí). Video nahrajte například na VUT Google Drive, kde ho bude možné přímo spustit z odkazu.</p> 
+
+<h2>Implementace</h2>
+<p>Stručná dokumentace k implementaci, která popisuje, které části projektu (např. PHP skripty) implementují jednotlivé případy použití.</p>
+
+<h3>Databáze</h3>
+
+Zde vložte grafické schéma relační databáze (tabulek v databázi).
+
+<h2>Instalace</h2>
+
+<h3>Softwarové požadavky</h3>
+<ul>
+    <li><strong>PHP:</strong> verze 8.4 nebo vyšší (s povolenými rozšířeními <code>pdo</code>, <code>pdo_pgsql</code>, <code>zip</code>, <code>mbstring</code>, <code>openssl</code>, <code>tokenizer</code>, <code>xml</code>, <code>ctype</code>)</li>
+    <li><strong>Správce PHP balíčků:</strong> Composer 2.x</li>
+    <li><strong>Node.js a npm:</strong> Node.js verze 22+ a npm (pro sestavení frontendových assetů přes Vite)</li>
+    <li><strong>Databázový server:</strong> PostgreSQL 18 (kompatibilní s PostgreSQL 16+)</li>
+    <li><strong>Použité frameworky a knihovny:</strong> Laravel 13, Inertia.js, React 19, Tailwind CSS, Vite (alternativně lze aplikaci spustit přímo v kontejneru pomocí přiloženého <code>Dockerfile</code>)</li>
+</ul>
+
+<h3>Lokální instalace a konfigurace</h3>
+<ol>
+    <li>Rozbalte odevzdaný archiv. Zdrojové kódy webové aplikace se nacházejí ve složce <code>information_system/</code> a databázové skripty ve složce <code>database/</code>.</li>
+    <li>Přejděte do adresáře aplikace a nainstalujte závislosti:
+        <pre>cd information_system
+composer install --optimize-autoloader
+npm install &amp;&amp; npm run build</pre>
+    </li>
+    <li>Zkopírujte konfigurační soubor <code>.env.example</code> na <code>.env</code> a vygenerujte aplikační klíč:
+        <pre>cp .env.example .env
+php artisan key:generate</pre>
+    </li>
+    <li>V souboru <code>.env</code> nastavte připojení k PostgreSQL databázi a URL aplikace:
+        <pre>APP_ENV=production
+APP_URL=https://iis-project-ek26.onrender.com
+
+DB_CONNECTION=pgsql
+DB_HOST=&lt;adresa_databazoveho_serveru&gt;
+DB_PORT=5432
+DB_DATABASE=&lt;nazev_databaze&gt;
+DB_USERNAME=&lt;uzivatel&gt;
+DB_PASSWORD=&lt;heslo&gt;</pre>
+    </li>
+    <li>Nastavte práva pro zápis do adresářů <code>storage/</code> a <code>bootstrap/cache/</code> (na Linuxu <code>chmod -R 775 storage bootstrap/cache</code>).</li>
+</ol>
+
+<h3>Inicializace databáze</h3>
+<p>Databázové schéma a ukázková data jsou uložena ve složce <code>database/</code>. Inicializaci provedete spuštěním skriptů v následujícím pořadí přes nástroj <code>psql</code> (nebo v grafickém klientovi jako DBeaver/DataGrip):</p>
+<pre>psql -h &lt;host&gt; -U &lt;uzivatel&gt; -d &lt;databaze&gt; -f database/schema.sql
+psql -h &lt;host&gt; -U &lt;uzivatel&gt; -d &lt;databaze&gt; -f database/data.sql</pre>
+<p>Skript <code>schema.sql</code> vytvoří všechny tabulky, primární a cizí klíče i integritní omezení. Skript <code>data.sql</code> naplní databázi testovacími uživateli všech rolí, místy, kategoriemi a událostmi a zosynchronizuje sekvence identifikátorů.</p>
+
+<h3>Nasazení na produkční server</h3>
+<p>Produkční verze aplikace běží na cloudové platformě <strong>Render.com</strong> (region Frankfurt) jako Docker kontejner postavený ze souboru <code>information_system/Dockerfile</code> (obraz <code>php:8.4-cli</code> s Node.js 22), který je propojen se spravovanou instancí <strong>PostgreSQL 18</strong>. Při spuštění kontejneru se cachuje konfigurace i routy (<code>php artisan config:cache</code>, <code>php artisan route:cache</code>) a spouští se vestavěný HTTP server na přiděleném portu. Na školním serveru <code>eva.fit.vutbr.cz</code> (<code>~/WWW/IIS/index.html</code>) je umístěna přesměrovací stránka odkazující na živou aplikaci.</p>
+
+<h2>Známé problémy</h2>
+<p>Zde popište, které body zadání nejsou implementovány a z jakého důvodu. Např. &bdquo;Z časových důvodů nebyla implementována správa uživatelů.&rdquo; Pomůžete tím zrychlit hodnocení, když neimplementované funkce nebudeme muset dlouze hledat.</p>
+
+</body>
+</html>
