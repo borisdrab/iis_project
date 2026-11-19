@@ -32,10 +32,7 @@ class UdalostController extends Controller
             ->where('stav', 'schvalene');
 
         if ($search !== '') {
-            $query->where(function ($q) use ($search) {
-                $q->where('oznacenie', 'ILIKE', '%' . $search . '%')
-                ->orWhere('popis', 'ILIKE', '%' . $search . '%');
-            });
+            $query->where('oznacenie', 'ILIKE', '%' . $search . '%');
         }
 
         if ($kategoriaId) {
