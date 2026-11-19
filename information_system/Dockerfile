@@ -15,4 +15,4 @@ RUN composer install --optimize-autoloader --no-interaction \
 
 EXPOSE 10000
 
-CMD php artisan config:cache && php artisan route:cache && php -S 0.0.0.0:${PORT:-10000} -t public
+CMD rm -rf public/storage && php artisan storage:link && php artisan config:cache && php artisan route:cache && php -S 0.0.0.0:${PORT:-10000} -t public
