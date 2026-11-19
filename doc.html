@@ -102,7 +102,6 @@ psql -h &lt;host&gt; -U &lt;pouzivatel&gt; -d &lt;databaza&gt; -f database/data.
 <p>Produkčná verzia aplikácie beží na cloudovej platforme <strong>Render.com</strong> (región Frankfurt) ako Docker kontajner postavený zo súboru <code>information_system/Dockerfile</code> (obraz <code>php:8.4-cli</code> s Node.js 22), ktorý je prepojený so spravovanou inštanciou <strong>PostgreSQL 18</strong>. Pri spustení kontajnera sa cachuje konfigurácia aj routy (<code>php artisan config:cache</code>, <code>php artisan route:cache</code>) a spúšťa sa vstavaný HTTP server na pridelenom porte. Na školskom serveri <code>eva.fit.vutbr.cz</code> (<code>~/WWW/IIS/index.html</code>) je umiestnená presmerovacia stránka odkazujúca na živú aplikáciu.</p>
 
 <h2>Známé problémy</h2>
-<p>Zde popište, které body zadání nejsou implementovány a z jakého důvodu. Např. &bdquo;Z časových důvodů nebyla implementována správa uživatelů.&rdquo; Pomůžete tím zrychlit hodnocení, když neimplementované funkce nebudeme muset dlouze hledat.</p>
-
+Kvôli dočasnému súborovému systému bezplatného hostingu Render.com sa dynamicky nahraté fotografie pri uspaní alebo reštarte kontajnera resetujú.
 </body>
 </html>
