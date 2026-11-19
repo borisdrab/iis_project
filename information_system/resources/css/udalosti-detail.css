@@ -251,6 +251,31 @@
     border-radius: 8px;
 }
 
+.galeria-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.foto-delete {
+    padding: 8px 12px;
+
+    color: white;
+    background-color: #b91c20;
+    border: none;
+    border-radius: 6px;
+
+    font:inherit;
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.foto-delete:hover {
+    background-color: #990b0b;
+}
+
 .udalost-komentare {
     margin-top: 30px;
 }

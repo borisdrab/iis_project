@@ -1,6 +1,6 @@
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import '../../../css/udalosti-detail.css';
-import type { SyntheticEvent} from 'react';
+import { useRef, type SyntheticEvent} from 'react';
 
 type Miesto = {
     id: number;
@@ -82,6 +82,7 @@ export default function Show({ udalost, hodnotenie, pocetHodnoteni, registracia,
     const udalostZacala = new Date() >= zaciatokUdalosti;
     const koniecUdalosti = new Date(`${udalost.datum_do}T${udalost.cas_do}`);
     const udalostSkoncila = new Date() >= koniecUdalosti;
+    const vstupFoto = useRef<HTMLInputElement>(null);
 
     const { auth } = usePage<{
         auth: {
@@ -173,8 +174,29 @@ export default function Show({ udalost, hodnotenie, pocetHodnoteni, registracia,
 
             onSuccess: () => {
                 resetFoto();
-            }
+
+                if (vstupFoto.current) {
+                    vstupFoto.current.value = '';
+                }
+            },
         });
+    }
+
+    function odstranFoto(fotoId: number) {
+        if (confirm('Naozaj chcete odstrániť túto fotografiu')) {
+            router.delete(`/udalosti/foto/${fotoId}`, {
+                preserveScroll: true,
+
+                onSuccess: () => {
+                    resetFoto();
+
+                    if (vstupFoto.current) {
+                        vstupFoto.current.value = '';
+                    }
+                },
+            });
+
+        }
     }
 
     return (
@@ -317,7 +339,7 @@ export default function Show({ udalost, hodnotenie, pocetHodnoteni, registracia,
                     </p>
                 )}
 
-                {auth.user && registracia && (
+                {auth.user && registracia && !udalostZacala &&(
                     <div className="udalost-actions">
                         {registracia.vstupne_id !== null && (
                             <p>
@@ -377,6 +399,7 @@ export default function Show({ udalost, hodnotenie, pocetHodnoteni, registracia,
 
                         <form onSubmit={submitFoto}>
                             <input
+                                ref={vstupFoto}
                                 type="file"
                                 accept="image/jpeg,image/png,image/webp"
                                 onChange={(event) =>
@@ -413,12 +436,22 @@ export default function Show({ udalost, hodnotenie, pocetHodnoteni, registracia,
 
                         <div className="galeria-grid">
                             {udalost.foto.map((foto) => (
-                                <img
-                                    key={foto.id}
-                                    src={foto.url}
-                                    alt={udalost.oznacenie}
-                                    className="galeria-foto"
-                                />
+                                <div key={foto.id} className="galeria-item">
+                                    <img
+                                        src={foto.url}
+                                        alt={udalost.oznacenie}
+                                        className="galeria-foto"
+                                    />
+                                    {auth.user?.id === udalost.zakladatel_id && (
+                                        <button
+                                            type="button"
+                                            className="foto-delete"
+                                            onClick={() => odstranFoto(foto.id)}
+                                        >
+                                            Odstrániť
+                                        </button>
+                                    )}
+                                </div>
                             ))}
                         </div>
                     </section>

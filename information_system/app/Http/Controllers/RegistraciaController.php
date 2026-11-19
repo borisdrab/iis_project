@@ -87,8 +87,19 @@ class RegistraciaController extends Controller
             ]);
         }
 
+        $udalost = Udalost::findOrFail($registracia->udalost_id);
+
+        $zaciatok_udalosti = Carbon::parse($udalost->datum_od . ' '. $udalost->cas_od, 'Europe/Prague');
+
+        if (Carbon::now('Europe/Prague')->greaterThanOrEqualTo($zaciatok_udalosti)) {
+            throw ValidationException::withMessages([
+                'registracia' => 'Registráciu na danú udalosť už nie je možné zrušiť, z dôvodu začatia akcie.'
+            ]);
+        }
+
         $registracia->delete();
-        return back()->with('oznamenie', 'Registrácia bola zrušená');
+
+        return back()->with('oznamenie', 'Registrácia bola úspešne zrušená.');
     }
 
     function potvrdPlatbu(Registracia $registracia) {

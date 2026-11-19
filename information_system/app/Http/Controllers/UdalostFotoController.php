@@ -31,4 +31,20 @@ class UdalostFotoController extends Controller
 
         return back();
     }
+
+    public function delete(UdalostFoto $foto)
+    {
+        $udalost = Udalost::findOrFail($foto->udalost_id);
+
+        if (Auth::id() !== $udalost->zakladatel_id) {
+            abort(403);
+        }
+
+        $path = str_replace('/storage/', '', $foto->url);
+        Storage::disk('public')->delete($path);
+
+        $foto->delete();
+
+        return back()->with('oznamenie', 'Fotografia bola odstránená.');
+    }
 }

@@ -31,8 +31,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/udalosti/{id}/komentare', [KomentarController::class, 'store'])
         ->name('komentare.store');
 
-    Route::post('/udalosti/{id}/foto', [UdalostFotoController::class, 'store'])
-        ->name('udalosti.foto.store');
+    Route::post('/udalosti/{id}/foto', [UdalostFotoController::class, 'store'])->name('udalosti.foto.store');
+    Route::delete('/udalosti/foto/{foto}', [UdalostFotoController::class, 'delete'])->name ('udalosti.foto.delete');
     Route::post('/udalosti/{udalost}/registracia', [RegistraciaController::class, 'registrujNaUdalost']);
 
     Route::delete('/registracie/{registracia}', [RegistraciaController::class, 'zrusRegistraciu']);
