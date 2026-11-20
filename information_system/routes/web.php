@@ -60,10 +60,14 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/miesta/cakajuce', [ModeratorController::class, 'cakajuceMiesta']);
         Route::patch('/miesta/{miesto}/schvalit', [ModeratorController::class, 'schvalMiesto']);
         Route::patch('/miesta/{miesto}/zamietnut', [ModeratorController::class, 'zamietnutMiesto']);
+        Route::put('/miesta/{miesto}', [ModeratorController::class, 'upravMiesto']);
+        Route::delete('/miesta/{miesto}', [ModeratorController::class, 'vymazMiesto']);
 
         Route::get('/kategorie/cakajuce', [ModeratorController::class, 'cakajuceKategorie']);
         Route::patch('/kategorie/{kategoria}/schvalit', [ModeratorController::class, 'schvalKategoriu']);
         Route::patch('/kategorie/{kategoria}/zamietnut', [ModeratorController::class, 'zamietnutKategoriu']);
+        Route::put('/kategorie/{kategoria}', [ModeratorController::class, 'upravKategoriu']);
+        Route::delete('/kategorie/{kategoria}', [ModeratorController::class, 'vymazKategoriu']);
 
         Route::delete('/komentare/{komentar}', [ModeratorController::class, 'odstranKomentar']);
 

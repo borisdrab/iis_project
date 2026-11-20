@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Udalost;
 use App\Models\Komentar;
 use App\Models\Uzivatel;
+use App\Models\Registracia;
+
 use Illuminate\Support\Facades\Auth;
 
 class KomentarController extends Controller
@@ -27,6 +29,16 @@ class KomentarController extends Controller
 
         if (!Uzivatel::where('id', $uzivatelId)->exists()) {
             abort(403, 'Používateľ neexistuje.');
+        }
+
+        $RegistrovanyAno = Registracia::where('uzivatel_id', $uzivatelId)
+            ->where('udalost_id', $udalost->id)
+            ->exists();
+
+        if ($RegistrovanyAno == false) {
+            return back()->withErrors([
+                'text' => 'Komentár su schopní pridať iba registrovaný účastníci.',
+            ]);
         }
 
         $validatedData = $request->validate([

@@ -52,13 +52,17 @@ type Kategorie = {
 type Props = {
     udalosti: Udalost[];
     miesta: Miesto[];
+    schvaleneMiesta: Miesto[];
     kategorie: Kategorie[];
+    schvaleneKategorie: Kategorie[];
 };
 
 export default function Moderation({
     udalosti,
     miesta,
+    schvaleneMiesta,
     kategorie,
+    schvaleneKategorie,
 }: Props) {
     function schvalUdalost(id: number) {
         router.patch(`/moderator/udalosti/${id}/schvalit`);
@@ -76,12 +80,73 @@ export default function Moderation({
         router.patch(`/moderator/miesta/${id}/zamietnut`);
     }
 
+    function vymazMiesto(id: number) {
+        if (window.confirm('Odstrániť toto miesto ?')) {
+            router.delete(`/moderator/miesta/${id}`, {
+                onError: (errors) => {
+                    window.alert(
+                        errors.miesto ??
+                        'Miesto sa nepodarilo odstrániť.'
+                    );
+                },
+            });
+        }
+    }
+
+    function upravMiesto(miesto: Miesto) {
+        const adresa = window.prompt('Nová adresa:', miesto.adresa);
+        if (adresa === null) {
+            return;
+        }
+
+        const typ = window.prompt('Nový typ:', miesto.typ ?? '');
+        if (typ === null) {
+            return;
+        }
+
+        const popis= window.prompt('Nový popis:', miesto.popis ?? '');
+        if (popis === null) {
+            return;
+        }
+
+        router.put(`/moderator/miesta/${miesto.id}`, {
+            adresa,
+            typ,
+            popis,
+        });
+    }
+
     function schvalKategoriu(id: number) {
         router.patch(`/moderator/kategorie/${id}/schvalit`);
     }
 
     function zamietniKategoriu(id: number) {
         router.patch(`/moderator/kategorie/${id}/zamietnut`);
+    }
+
+    function vymazKategoriu(id: number) {
+        if (window.confirm('Odstrániť túto kategóriu?')) {
+            router.delete(`/moderator/kategorie/${id}`, {
+                onError: (errors) => {
+                    window.alert(
+                        errors.kategoria ??
+                        'Kategóriu sa nepodarilo odstrániť.'
+                    );
+                },
+            });
+        }
+    }
+
+    function upravKategoriu(kategoria: Kategorie) {
+        const typ = window.prompt('Nový názov kategórie:', kategoria.typ);
+
+        if (typ === null) {
+            return;
+        }
+
+        router.put(`/moderator/kategorie/${kategoria.id}`, {
+            typ,
+        });
     }
 
     return (
@@ -255,6 +320,55 @@ export default function Moderation({
 
                 <section className="moderation-section">
                     <div className="moderation-section-header">
+                        <h2>Schválené miesta</h2>
+                        <span>{schvaleneMiesta.length}</span>
+                    </div>
+
+                    {schvaleneMiesta.length === 0 ? (
+                        <p className="moderation-empty">
+                            Žiadne schválené miesta.
+                        </p>
+                    ) : (
+                        <div className="moderation-list">
+                            {schvaleneMiesta.map((miesto) => (
+                                <article
+                                    className="moderation-card" key={miesto.id}>
+                                    <div className="moderation-card-content">
+                                        <h3>{miesto.adresa}</h3>
+
+                                        <p className="moderation-secondary">
+                                            {miesto.typ}
+                                        </p>
+
+                                        {miesto.popis && <p>{miesto.popis}</p>}
+                                    </div>
+
+                                    <div className="moderation-actions">
+                                        <button
+                                            type="button"
+                                            className="moderation-approve"
+                                            onClick={() => upravMiesto(miesto)}
+                                        >
+                                            Upraviť
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            className="moderation-reject"
+                                            onClick={() =>
+                                                 vymazMiesto(miesto.id)}
+                                        >
+                                            Odstraniť
+                                        </button>
+                                    </div>
+                                </article>
+                            ))}
+                        </div>
+                    )}
+                </section>
+
+                <section className="moderation-section">
+                    <div className="moderation-section-header">
                         <h2>Čakajúce kategórie</h2>
                         <span>{kategorie.length}</span>
                     </div>
@@ -318,6 +432,59 @@ export default function Moderation({
                         </div>
                     )}
                 </section>
+
+                <section className="moderation-section">
+                    <div className="moderation-section-header">
+                        <h2>Schválené kategórie</h2>
+                        <span>{schvaleneKategorie.length}</span>
+                    </div>
+
+                    {schvaleneKategorie.length === 0 ? (
+                        <p className="moderation-empty">
+                            Žiadne schválené kategórie.
+                        </p>
+                    ) : (
+                        <div className="moderation-list">
+                            {schvaleneKategorie.map((kategoria) => (
+                                <article
+                                    className="moderation-card" key={kategoria.id}>
+                                    <div className="moderation-card-content">
+                                        <h3>{kategoria.typ}</h3>
+
+
+                                        <div className="moderation-details">
+                                            <span>
+                                                Rodičovská kategória:{' '}
+                                                <strong>
+                                                    {kategoria.rodic?.typ ?? 'Žiadna'}
+                                                </strong>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div className="moderation-actions">
+                                     <button
+                                        type="button"
+                                        className="moderation-approve"
+                                        onClick={() => upravKategoriu(kategoria)}
+                                    >
+                                        Upraviť
+                                    </button>
+
+                                    <button 
+                                        type="button"
+                                        className="moderation-reject"
+                                        onClick={() => vymazKategoriu(kategoria.id)}
+                                    >
+                                        Odstrániť
+                                    </button>
+                                </div>
+                            </article>
+                        ))}
+                    </div>
+                )}
+            </section>
+
             </main>
         </>
     );

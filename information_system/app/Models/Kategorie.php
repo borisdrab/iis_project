@@ -23,4 +23,14 @@ class Kategorie extends Model
     public function rodic() {
         return $this->belongsTo(Kategorie::class, 'rodic_id');
     }
+
+    public function udalosti()
+    {
+        return $this->hasMany(Udalost::class, 'kategoria_id');
+    }
+
+    public function deti() 
+    {
+        return $this->hasMany(Kategorie::class, 'rodic_id');
+    }
 }

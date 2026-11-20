@@ -8,9 +8,8 @@ use App\Models\Komentar;
 use App\Models\Kategorie;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
-
-//use Iluminate\Http\Request;
 
 class ModeratorController extends Controller
 {
@@ -48,6 +47,32 @@ class ModeratorController extends Controller
         return Udalost::where('stav', 'cakajuce')->get();
     }
 
+    function upravMiesto(Request $poziadavka, Miesto $miesto)
+    {
+        $data = $poziadavka->validate([
+            'adresa' => 'required|string|max:255',
+            'typ' => 'nullable|string|max:100',
+            'popis' => 'nullable|string',
+        ]);
+
+        $miesto->update($data);
+
+        return back()->with('oznamenie', 'Miesto bolo upravené úspešne.');
+    }
+
+    function vymazMiesto(Miesto $miesto) 
+    {
+        if ($miesto->udalosti()->exists()) {
+            throw ValidationException::withMessages([
+                'miesto' => 'Miesto sa nedá odstrániť, z dôvodu výskytu v existujúcej udalosti.',
+            ]);
+        }
+
+        $miesto->delete();
+
+        return back()->with('oznamenie', 'Miesto bolo úspešne odstránené.');
+    }
+
 
     function schvalMiesto(Miesto $miesto) {
 
@@ -81,6 +106,36 @@ class ModeratorController extends Controller
     function cakajuceMiesta() 
     {
         return Miesto::where('stav', 'cakajuce')->get();
+    }
+
+    function upravKategoriu(Request $poziadavka, Kategorie $kategoria)
+    {
+        $data = $poziadavka->validate([
+            'typ' => 'required|string|max:100',
+        ]);
+
+        $kategoria->update($data);
+
+        return back()->with('oznamenie', 'Kategoria bola úspešne upravená.');
+    }
+
+    function vymazKategoriu(Kategorie $kategoria)
+    {
+        if ($kategoria->udalosti()->exists()) {
+            throw ValidationException::withMessages([
+                'kategoria' => 'Kategóriu sa nedá odstrániť, z dôvodu výskytu v existujúcej udalosti.'
+            ]);
+        }
+
+        if ($kategoria->deti()->exists()) {
+            throw ValidationException::withMessages([
+                'kategoria' => 'Kategóriu sa nedá odstrániť, pretože obsahuje podkategórie.'
+            ]);
+        }
+
+        $kategoria->delete();
+
+        return back()->with('oznamenie', 'Kategória bola úspešne odstránená.');
     }
 
     function schvalKategoriu(Kategorie $kategoria) {
@@ -133,15 +188,26 @@ class ModeratorController extends Controller
         $miesta = Miesto::with('navrhovatel')
             ->where('stav', 'cakajuce')
             ->get();
+        
+        $schvaleneMiesta = Miesto::where('stav', 'schvalene')
+            ->orderBy('adresa')
+            ->get();
 
         $kategorie = Kategorie::with(['navrhovatel', 'rodic' ])
             ->where('stav', 'cakajuce')
             ->get();
 
+        $schvaleneKategorie = Kategorie::with('rodic')
+            ->where('stav', 'schvalene')
+            ->orderBy('typ')
+            ->get();
+
         return Inertia::render('moderator/moderation', [
             'udalosti' => $udalosti,
             'miesta' => $miesta,
+            'schvaleneMiesta' => $schvaleneMiesta,
             'kategorie' => $kategorie,
+            'schvaleneKategorie' => $schvaleneKategorie,
         ]);
     }
 }
