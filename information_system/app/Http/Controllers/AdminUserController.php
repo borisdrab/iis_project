@@ -21,7 +21,13 @@ class AdminUserController extends Controller
             ->leftJoin('moderator', 'osoba.id', '=', 'moderator.id')
             ->leftJoin('administrator', 'osoba.id', '=', 'administrator.id')
             ->select(
-                'osoba.id', 'osoba.meno', 'osoba.email', 'osoba.aktivny',
+                'osoba.id',
+                'osoba.meno',
+                'osoba.email',
+                'osoba.aktivny',
+                'osoba.kontakt',
+                'uzivatel.vek',
+                'uzivatel.pohlavie',
                 DB::raw('uzivatel.id IS NOT NULL AS is_user'),
                 DB::raw('moderator.id IS NOT NULL AS is_moderator'),
                 DB::raw('administrator.id IS NOT NULL AS is_admin')
@@ -53,11 +59,12 @@ class AdminUserController extends Controller
                 'aktivny' => true,
             ]);
 
-                Uzivatel::create([
-                    'id' => $osoba->id,
-                    'vek' => $data['vek'] ?? null,
-                    'pohlavie' => $data['pohlavie'] ?? null,
-                ]);
+            Uzivatel::create([
+                'id' => $osoba->id,
+                'vek' => $data['vek'] ?? null,
+                'pohlavie' => $data['pohlavie'] ?? null,
+            ]);
+
             if (in_array($data['rola'], ['Moderator', 'Administrator'])) {
                 Moderator::create(['id' => $osoba->id]);
             }
@@ -83,9 +90,9 @@ class AdminUserController extends Controller
             'rola' => ['required', 'in:Uzivatel,Moderator,Administrator'],
         ]);
 
-        $stara = $this->aktualnaRola($osoba->id);
+        $stara = $this->aktualnaRola((int) $osoba->id);
 
-        if ($osoba->id === Auth::id() && $data['rola'] !== $stara) {
+        if ((int) $osoba->id === (int) Auth::id() && $data['rola'] !== $stara) {
             return back()->withErrors(['rola' => 'Nemôžeš zmeniť vlastnú rolu.']);
         }
 
@@ -94,11 +101,15 @@ class AdminUserController extends Controller
                 $updateData = [
                     'meno' => $data['meno'],
                     'email' => $data['email'],
-                    'kontakt' => $data['kontakt'] ?? null,
                 ];
+
+                if (array_key_exists('kontakt', $data)) {
+                    $updateData['kontakt'] = $data['kontakt'];
+                }
                 if (!empty($data['password'])) {
                     $updateData['heslo_hash'] = Hash::make($data['password']);
                 }
+
                 $osoba->update($updateData);
 
                 if ($data['rola'] !== $stara) {
@@ -116,10 +127,16 @@ class AdminUserController extends Controller
                         Administrator::firstOrCreate(['id' => $osoba->id]);
                     }
                 }
-                    Uzivatel::updateOrCreate(
-                        ['id' => $osoba->id],
-                        ['vek' => $data['vek'] ?? null, 'pohlavie' => $data['pohlavie'] ?? null]
-                    );
+
+                $uzivatelData = [];
+                if (array_key_exists('vek', $data)) {
+                    $uzivatelData['vek'] = $data['vek'];
+                }
+                if (array_key_exists('pohlavie', $data)) {
+                    $uzivatelData['pohlavie'] = $data['pohlavie'];
+                }
+
+                Uzivatel::updateOrCreate(['id' => $osoba->id], $uzivatelData);
             });
         } catch (QueryException $e) {
             return back()->withErrors([
@@ -134,7 +151,7 @@ class AdminUserController extends Controller
     {
         $osoba = Osoba::findOrFail($id);
 
-        if ($osoba->id === Auth::id()) {
+        if ((int) $osoba->id === (int) Auth::id()) {
             return response()->json(['message' => 'Nemôžeš deaktivovať sám seba.'], 422);
         }
 

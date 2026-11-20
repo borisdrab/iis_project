@@ -2,98 +2,116 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Registracia;
 use App\Models\Udalost;
 use App\Models\Vstupne;
 use App\Models\Zaplatil;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
-use App\Models\Registracia;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
-class RegistraciaController extends Controller 
+class RegistraciaController extends Controller
 {
-    function registrujNaUdalost(Request $poziadavka, Udalost $udalost)
+    public function registrujNaUdalost(Request $poziadavka, Udalost $udalost)
     {
-        if ($udalost->stav !== 'schvalene') {
-            throw ValidationException::withMessages([
-                'udalost'=> 'Na túto udalosť sa nedá registrovať.',
-            ]);
-        }
+        $validovane = $poziadavka->validate([
+            'vstupne_id' => ['nullable', 'integer'],
+        ]);
 
-        $zaciatok_udalosti = Carbon::parse($udalost->datum_od . ' ' . $udalost->cas_od, 'Europe/Prague');
+        $vybraneVstupne = $validovane['vstupne_id'] ?? null;
 
-        if (Carbon::now('Europe/Prague')->greaterThanOrEqualTo($zaciatok_udalosti)) {
-            throw ValidationException::withMessages([
-                'udalost' => 'Registrácia na danú udalosť už nie je možná.',
-            ]);
-        }
+        DB::transaction(function () use ($udalost, $vybraneVstupne) {
+            $zamknutaUdalost = Udalost::where('id', $udalost->id)
+                ->lockForUpdate()
+                ->firstOrFail();
 
-        $existuje = Registracia::where('uzivatel_id', Auth::id())
-        ->where('udalost_id', $udalost->id)
-        ->exists();
-
-        if ($existuje) {
-            throw ValidationException::withMessages([
-                'udalost' => 'Na danú udalosť ste už zaregistrovaný.',
-            ]);
-        }
-
-        if ($udalost->kapacita !== null) {
-            $pocetRegistracii = Registracia::where('udalost_id', $udalost->id)->count();
-
-            if ($pocetRegistracii >= $udalost->kapacita) {
+            if ($zamknutaUdalost->stav !== 'schvalene') {
                 throw ValidationException::withMessages([
-                    'udalost' => 'Kapacita udalosti je už naplnená.',
+                    'udalost' => 'Na túto udalosť sa nedá registrovať.',
                 ]);
             }
-        }
 
-        $maVstupne = Vstupne::where('udalost_id', $udalost->id)->exists();
-        $vybraneVstupne = $poziadavka->input('vstupne_id');
+            $zaciatokUdalosti = Carbon::parse(
+                $zamknutaUdalost->datum_od . ' ' . $zamknutaUdalost->cas_od,
+                'Europe/Prague'
+            );
 
-        if ($maVstupne && $vybraneVstupne === null) {
-            throw ValidationException::withMessages([
-                'vstupne_id' => 'Musíte si vybrať kategóriu vstupného.',
-            ]);
-        }
+            if (Carbon::now('Europe/Prague')->greaterThanOrEqualTo($zaciatokUdalosti)) {
+                throw ValidationException::withMessages([
+                    'udalost' => 'Registrácia na danú udalosť už nie je možná.',
+                ]);
+            }
 
-        if ($vybraneVstupne !== null) {
-            $existujeVstupne = Vstupne::where('id', $vybraneVstupne)
-                ->where('udalost_id', $udalost->id)
+            $existuje = Registracia::where('uzivatel_id', Auth::id())
+                ->where('udalost_id', $zamknutaUdalost->id)
                 ->exists();
 
-            if (!$existujeVstupne) {
+            if ($existuje) {
                 throw ValidationException::withMessages([
-                    'vstupne_id' => 'Vybrané vstupné nepatrí danej udalosti.',
+                    'udalost' => 'Na danú udalosť ste už zaregistrovaný.',
                 ]);
             }
-        }
 
-        Registracia::create([
-            'uzivatel_id' => Auth::id(),
-            'udalost_id' => $udalost->id,
-            'vstupne_id' => $vybraneVstupne,
-        ]);
+            if ($zamknutaUdalost->kapacita !== null) {
+                $pocetRegistracii = Registracia::where('udalost_id', $zamknutaUdalost->id)->count();
+
+                if ($pocetRegistracii >= $zamknutaUdalost->kapacita) {
+                    throw ValidationException::withMessages([
+                        'udalost' => 'Kapacita udalosti je už naplnená.',
+                    ]);
+                }
+            }
+
+            $maVstupne = Vstupne::where('udalost_id', $zamknutaUdalost->id)->exists();
+
+            if ($maVstupne && $vybraneVstupne === null) {
+                throw ValidationException::withMessages([
+                    'vstupne_id' => 'Musíte si vybrať kategóriu vstupného.',
+                ]);
+            }
+
+            if ($vybraneVstupne !== null) {
+                $existujeVstupne = Vstupne::where('id', $vybraneVstupne)
+                    ->where('udalost_id', $zamknutaUdalost->id)
+                    ->exists();
+
+                if (!$existujeVstupne) {
+                    throw ValidationException::withMessages([
+                        'vstupne_id' => 'Vybrané vstupné nepatrí danej udalosti.',
+                    ]);
+                }
+            }
+
+            Registracia::create([
+                'uzivatel_id' => Auth::id(),
+                'udalost_id' => $zamknutaUdalost->id,
+                'vstupne_id' => $vybraneVstupne,
+            ]);
+        });
 
         return back()->with('oznamenie', 'Na udalosť ste sa úspešne zaregistrovali.');
     }
 
-    function zrusRegistraciu(Registracia $registracia)
+    public function zrusRegistraciu(Registracia $registracia)
     {
-        if ($registracia->uzivatel_id != Auth::id()) {
+        if ((int) $registracia->uzivatel_id !== (int) Auth::id()) {
             throw ValidationException::withMessages([
-                'registracia' => 'Nemáte práva na zrušenie tejto registrácie.'
+                'registracia' => 'Nemáte práva na zrušenie tejto registrácie.',
             ]);
         }
 
         $udalost = Udalost::findOrFail($registracia->udalost_id);
 
-        $zaciatok_udalosti = Carbon::parse($udalost->datum_od . ' '. $udalost->cas_od, 'Europe/Prague');
+        $zaciatokUdalosti = Carbon::parse(
+            $udalost->datum_od . ' ' . $udalost->cas_od,
+            'Europe/Prague'
+        );
 
-        if (Carbon::now('Europe/Prague')->greaterThanOrEqualTo($zaciatok_udalosti)) {
+        if (Carbon::now('Europe/Prague')->greaterThanOrEqualTo($zaciatokUdalosti)) {
             throw ValidationException::withMessages([
-                'registracia' => 'Registráciu na danú udalosť už nie je možné zrušiť, z dôvodu začatia akcie.'
+                'registracia' => 'Registráciu na danú udalosť už nie je možné zrušiť, z dôvodu začatia akcie.',
             ]);
         }
 
@@ -102,10 +120,11 @@ class RegistraciaController extends Controller
         return back()->with('oznamenie', 'Registrácia bola úspešne zrušená.');
     }
 
-    function potvrdPlatbu(Registracia $registracia) {
+    public function potvrdPlatbu(Registracia $registracia)
+    {
         $udalost = Udalost::findOrFail($registracia->udalost_id);
 
-        if ($udalost->zakladatel_id !== Auth::id()) {
+        if ((int) $udalost->zakladatel_id !== (int) Auth::id()) {
             abort(403, 'Nedisponujete oprávnením na potvrdenie tejto platby.');
         }
 
