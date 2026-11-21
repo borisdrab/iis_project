@@ -172,8 +172,6 @@ class ModeratorController extends Controller
         return Kategorie::where('stav', 'cakajuce')->get();
     }
 
-    //dorobit komentare
-
     function odstranKomentar(Komentar $komentar) {
 
         $komentar->delete();
