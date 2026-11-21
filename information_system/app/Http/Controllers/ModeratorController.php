@@ -21,6 +21,12 @@ class ModeratorController extends Controller
             ]);
         }
 
+        if ($udalost->miesto->stav !== 'schvalene' || $udalost->kategoria->stav !== 'schvalene') {
+            throw ValidationException::withMessages([
+                'stav' => 'Najprv musí byť schválené miesto aj kategória tejto udalosti.',
+             ]);
+        }
+
         $udalost->stav = 'schvalene';
         $udalost->schvalil_id = Auth::id();
         $udalost->save();
@@ -143,6 +149,12 @@ class ModeratorController extends Controller
         if ($kategoria->stav !== 'cakajuce') {
             throw ValidationException::withMessages([
                 'stav' => 'Kategória nečaká na schválenie.',
+            ]);
+        }
+
+        if ($kategoria->rodic_id && $kategoria->rodic->stav !== 'schvalene') {
+        throw ValidationException::withMessages([
+            'stav' => 'Najprv musí byť schválená nadradená kategória.',
             ]);
         }
 

@@ -62,8 +62,12 @@ class UdalostController extends Controller
     public function show(int $id): Response
     {
         $udalost = Udalost::with(['miesto', 'kategoria', 'vstupne', 'foto', 'komentare.uzivatel.osoba'])
-            ->where('stav', 'schvalene')
             ->findOrFail($id);
+            if ($udalost->stav !== 'schvalene'
+            && (int) $udalost->zakladatel_id !== (int) Auth::id()
+            && !$this->jeModerator()) {
+                abort(404);
+            }
 
         $hodnotenie = $udalost->komentare()
             ->whereNotNull('hodnotenie')
@@ -114,7 +118,7 @@ class UdalostController extends Controller
         $this->skontrolujCas($data);
         $jeModerator = $this->jeModerator();
 
-        DB::transaction(function () use ($data, $jeModerator) {
+        $udalost=DB::transaction(function () use ($data, $jeModerator) {
             $udalost = new Udalost(Arr::except($data, ['vstupne']));
             $udalost->zakladatel_id = Auth::id();
             $udalost->stav = $jeModerator ? 'schvalene' : 'cakajuce';
@@ -128,9 +132,10 @@ class UdalostController extends Controller
                     'cennik' => $v['cennik'],
                 ]);
             }
+            return $udalost;
         });
 
-        return redirect('/')->with('success', 'Udalosť bola uložená.');
+        return redirect('/udalosti/' . $udalost->id)->with('success', 'Udalosť bola uložená.');
     }
 
     public function edit(Udalost $udalost)
@@ -188,7 +193,7 @@ class UdalostController extends Controller
                 ->delete();
         });
 
-        return redirect('/')->with('success', 'Udalosť bola upravená.');
+        return redirect('/udalosti/' . $udalost->id);
     }
 
     private function getCategoryAndChildren(int $id, $kategorie): array
