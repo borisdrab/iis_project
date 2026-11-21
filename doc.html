@@ -94,7 +94,7 @@
 <h3>Lokálna inštalácia a konfigurácia</h3>
 <ol>
     <li>Rozbaľte odovzdaný archív. Zdrojové kódy webovej aplikácie sa nachádzajú v priečinku <code>information_system/</code> a databázové skripty v priečinku <code>database/</code>.</li>
-    <li>Vytvorte databázu a inicializujte ju.</li>
+    <li>Vytvorte a inicializujte databázu podľa sekcie <em>Inicializácia databázy</em> nižšie (PostgreSQL server musí bežať).</li>
     <li>Prejdite do adresára aplikácie a nainštalujte závislosti:
         <pre>cd information_system
 composer install --optimize-autoloader
@@ -105,15 +105,16 @@ npm install &amp;&amp; npm run build</pre>
 php artisan key:generate</pre>
     </li>
     <li>V súbore <code>.env</code> nastavte pripojenie k PostgreSQL databáze a URL aplikácie:
-        <pre>APP_ENV=production
+        <pre>APP_ENV=local
 APP_URL=http://localhost:8000
 
 DB_CONNECTION=pgsql
-DB_HOST=&lt;adresa_databazoveho_servera&gt;
+DB_HOST=127.0.0.1
 DB_PORT=5432
-DB_DATABASE=&lt;nazov_databazy&gt;
-DB_USERNAME=&lt;pouzivatel&gt;
+DB_DATABASE=iis
+DB_USERNAME=iis
 DB_PASSWORD=&lt;heslo&gt;</pre>
+        Pri lokálnom spustení nastavte <code>APP_ENV=local</code>. Na produkčnom serveri (Render) je nastavené <code>APP_ENV=production</code>, kedy aplikácia vynucuje HTTPS, ktoré lokálny server <code>php artisan serve</code> nepodporuje.
     </li>
     <li>Nastavte práva na zápis do adresárov <code>storage/</code> a <code>bootstrap/cache/</code> a vytvorte odkaz na verejné súbory (na Linuxe):
         <pre>chmod -R 775 storage bootstrap/cache
@@ -123,10 +124,18 @@ php artisan storage:link</pre>
 </ol>
 
 <h3>Inicializácia databázy</h3>
-<p>Databázová schéma a ukážkové dáta sú uložené v priečinku <code>database/</code>. Z koreňového adresára rozbaleného archívu vykonajte inicializáciu spustením skriptov v nasledujúcom poradí cez nástroj <code>psql</code>:</p>
-<pre>psql -h &lt;host&gt; -U &lt;pouzivatel&gt; -d &lt;databaza&gt; -f database/schema.sql
-psql -h &lt;host&gt; -U &lt;pouzivatel&gt; -d &lt;databaza&gt; -f database/data.sql</pre>
-<p>Skript <code>schema.sql</code> vytvorí všetky tabuľky, primárne a cudzie kľúče aj integritné obmedzenia. Skript <code>data.sql</code> naplní databázu testovacími používateľmi všetkých rolí, miestami, kategóriami a udalosťami a zosynchronizuje sekvencie identifikátorov.</p>
+<p>Aplikácia vyžaduje bežiaci PostgreSQL server (predvolene na <code>127.0.0.1:5432</code>). Používateľ a databáza musia zodpovedať hodnotám <code>DB_USERNAME</code>, <code>DB_PASSWORD</code> a <code>DB_DATABASE</code> v súbore <code>.env</code>.</p>
+<ol>
+    <li>Vytvorte používateľa a prázdnu databázu (heslo nahraďte vlastným a rovnaké uveďte v <code>.env</code>):
+        <pre>sudo -u postgres psql -c "CREATE USER iis WITH PASSWORD '&lt;heslo&gt;';"
+sudo -u postgres psql -c "CREATE DATABASE iis OWNER iis;"</pre>
+    </li>
+    <li>Z koreňového adresára rozbaleného archívu (tam, kde je priečinok <code>database/</code>) spustite skripty v tomto poradí:
+        <pre>psql -h 127.0.0.1 -U iis -d iis -f database/schema.sql
+psql -h 127.0.0.1 -U iis -d iis -f database/data.sql</pre>
+    </li>
+</ol>
+<p>Skript <code>schema.sql</code> vytvorí všetky tabuľky, primárne a cudzie kľúče aj integritné obmedzenia (pri opakovanom spustení tabuľky najprv zmaže). Skript <code>data.sql</code> naplní databázu testovacími používateľmi všetkých rolí, miestami, kategóriami a udalosťami a zosynchronizuje sekvencie identifikátorov. Schéma sa nevytvára Laravel migráciami, preto nespúšťajte <code>php artisan migrate</code>.</p>
 
 <h3>Nasadenie na produkčný server</h3>
 <p>Produkčná verzia aplikácie beží na cloudovej platforme <strong>Render.com</strong> (región Frankfurt) ako Docker kontajner postavený zo súboru <code>information_system/Dockerfile</code>, ktorý je prepojený so spravovanou inštanciou <strong>PostgreSQL 18</strong>.</p>
