@@ -55,9 +55,9 @@ export default function Edit({
     } = useForm({
         oznacenie: udalost.oznacenie,
         datum_od: udalost.datum_od,
-        cas_od: udalost.cas_od,
+        cas_od: udalost.cas_od.slice(0, 5),
         datum_do: udalost.datum_do,
-        cas_do: udalost.cas_do,
+        cas_do: udalost.cas_do.slice(0, 5),
         vedenie_sedenia: udalost.vedenie_sedenia ?? '',
         kapacita: udalost.kapacita?.toString() ?? '',
         popis: udalost.popis ?? '',
@@ -75,7 +75,7 @@ export default function Edit({
     ) {
         event.preventDefault();
 
-        put('/udalosti/${udalost.id}');
+        put(`/udalosti/${udalost.id}`);
     }
 
     function pridajVstupne() {
